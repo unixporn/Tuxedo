@@ -1,0 +1,18 @@
+{
+  "VERSION": "0.1",
+  "DESCRIPTION": "Just a bot, here to help us with server moderation and tide quelling.",
+  "MAINTENANCE": false,
+  "BOT_TOKEN": "",
+  "BOT_PREFIX": ["#!", "upmo ", "upmo!", "up!"],
+  "OWNERS": ["97788939196182528"],
+  "BLOCKED": ["97138137679028224"],
+  "MOD_ROLES": ["361910282307764227"],
+  "HELPER_ROLES": ["400882287169896451"],
+  "RETHINKDB": {
+	  "DB": "upmo",
+	  "USERNAME": "admin",
+	  "PASSWORD": "",
+	  "HOST": "localhost",
+    "PORT": 28015
+  }
+}
