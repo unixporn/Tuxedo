@@ -161,8 +161,13 @@ async def help(ctx, command: str=None):
         ctx, cmd if cmd is not False else ctx.bot)
     helptext = helptext[0]
     try:
-        await ctx.author.send(helptext)
-        await ctx.message.add_reaction("📬")
+        if command is None:
+            await ctx.author.send(helptext)
+            await ctx.message.add_reaction(u"\u2709")
+        elif not cmd:
+            await ctx.message.add_reaction(u"\u2753")
+        else:
+            await ctx.send(helptext)
     except discord.Forbidden:
         await ctx.send(helptext)
 bot.get_command("help").hidden = True

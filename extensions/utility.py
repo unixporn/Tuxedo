@@ -12,8 +12,9 @@ import datetime
 import time
 from contextlib import redirect_stdout
 from lxml import etree
+import textwrap
 import rethinkdb as r
-
+from urllib.parse import quote as uriquote
 
 class Utility:
 
@@ -792,9 +793,8 @@ class Utility:
         # the result of a google card, an embed
         card = None
 
-        async with self.bot.session.get(url, params=params, headers=headers) as resp:
+        async with self.aioclient.get(url, params=params, headers=headers) as resp:
             if resp.status != 200:
-                log.info('Google failed to respond with %s status code.', resp.status)
                 raise RuntimeError('Google has failed to respond.')
 
             root = etree.fromstring(await resp.text(), etree.HTMLParser())
@@ -835,8 +835,8 @@ class Utility:
 
         return card, entries
 
-    @commands.command(aliases=['google'])
-    async def g(self, ctx, *, query):
+    @commands.command(aliases=['g', 'search'])
+    async def google(self, ctx, *, query):
         """Searches google and gives you top result."""
         await ctx.trigger_typing()
         try:
