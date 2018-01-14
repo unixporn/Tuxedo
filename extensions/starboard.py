@@ -53,6 +53,7 @@ class Starboard:
         if channel is None:
             return  # no more starboard channel, don't wanna throw an exception
         if name == sb_name:
+            print(count)
             if count >= min_count:
                 e = discord.Embed(colour=r.message.author.color)
                 e.set_author(
@@ -60,6 +61,8 @@ class Starboard:
                     icon_url=r.message.author.avatar_url_as(format='png'))
                 e.description = r.message.content
                 e.timestamp = datetime.datetime.utcnow()
+                if r.message.attachments:
+                    e.set_image(url=r.message.attachments[0].url)
                 fallback = f'{self.star_type(count)} **{count}** <#{r.message.channel.id}>'
 
                 if not star_entry:
@@ -68,19 +71,30 @@ class Starboard:
                         "message_id": str(r.message.id),
                         "starboard_id": str(star_msg.id)
                     }
-                    rethink \
+                    return rethink \
                         .table("starboard") \
                         .insert(star_entry) \
                         .run(self.conn)
-                    return star_msg
+                    
                 else:
+                    try:
+                        star_msg = await channel.get_message(
+                            star_entry[0]["starboard_id"])
+                        return await star_msg.edit(content=fallback, embed=e)
+                    except discord.errors.NotFound:
+                        new_star_msg = await channel.send(fallback, embed=e)
+                        return rethink \
+                            .table("starboard") \
+                            .filter({"message_id": str(r.message.id)}) \
+                            .update({"starboard_id": str(new_star_msg.id)}) \
+                            .run(self.conn)
+            elif star_entry:
+                try:
                     star_msg = await channel.get_message(
                         star_entry[0]["starboard_id"])
-                    return await star_msg.edit(content=fallback, embed=e)
-            elif star_entry:
-                star_msg = await channel.get_message(
-                    star_entry[0]["starboard_id"])
-                return await star_msg.delete()
+                    return await star_msg.delete()
+                except discord.errors.NotFound:
+                    return
 
     async def on_reaction_add(self, r, u):
         return await self.process_star(r, u)
