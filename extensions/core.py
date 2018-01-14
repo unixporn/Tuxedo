@@ -57,7 +57,7 @@ class Core:
         elif TB <= B:
             return '{0:.2f} TB'.format(B/TB)
 
-    @commands.command(aliases=['bot'])
+    @commands.command(aliases=['bot', 'source', 'code', 'github'])
     async def about(self, ctx):
         text = f"""
 ```ini

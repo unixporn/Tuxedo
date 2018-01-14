@@ -15,10 +15,8 @@ class Info:
         'Provides info on a server.'
         guild = ctx.guild
         if isinstance(ctx.channel, discord.abc.PrivateChannel):
-            error_embed = discord.Embed(
-                color=15746887,
-                description='**Error**: _Cannot be used in a DM._')
-            await ctx.send(embed=error_embed)
+            await ctx.send(':x: Cannot be used in a DM.')
+            return
         e = discord.Embed()
         e.set_author(name=guild.name, icon_url=guild.icon_url)
         if guild.owner is None:
@@ -96,14 +94,10 @@ class Info:
     async def role(self, ctx, *, role: discord.Role=None):
         'Provides info on a role.'
         if isinstance(ctx.channel, discord.abc.PrivateChannel):
-            error_embed = discord.Embed(
-                color=15746887,
-                description='**Error**: _Cannot be used in a DM._')
-            await ctx.send(embed=error_embed)
+            await ctx.send(':x: Cannot be used in a DM.', delete_after=3)
+            return
         if role is None:
-            error_embed = discord.Embed(
-                color=15746887, description='**Error**: _No role provided._')
-            await ctx.send(embed=error_embed)
+            await ctx.send(':x: No role provided.', delete_after=3)
             return
         e = discord.Embed(color=role.color)
         e.set_author(name='@{}'.format(role.name))
@@ -138,10 +132,8 @@ class Info:
     async def user(self, ctx, *, user: discord.Member=None):
         'Provides info on a user.'
         if isinstance(ctx.channel, discord.abc.PrivateChannel):
-            error_embed = discord.Embed(
-                color=15746887,
-                description='**Error**: _Cannot be used in a DM._')
-            await ctx.send(embed=error_embed)
+            await ctx.send(':x: Cannot be used in a DM.', delete_after=3)
+            return
         if user is None:
             user = ctx.author
         embed_color = user.color
