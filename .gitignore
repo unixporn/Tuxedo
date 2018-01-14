@@ -42,6 +42,7 @@ __pycache__/
 ##################
 config.json
 upmo-discord.pem
+upmo-discord.ppk
 
 # MemethonkDB #
 ###############
