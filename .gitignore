@@ -38,9 +38,10 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 
-# Config Secrets #
+# Secrets #
 ##################
 config.json
+upmo-discord.pem
 
 # MemethonkDB #
 ###############

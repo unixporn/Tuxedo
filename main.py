@@ -17,6 +17,7 @@ from discord.ext import commands
 from discord.ext.commands import errors as commands_errors
 from discord import utils as dutils
 from utils import permissions
+import textwrap
 
 # INITIALIZE BOT #
 
@@ -130,16 +131,18 @@ async def on_command_error(ctx, error):
                 "reported, but give <@97788939196182528> a heads-up in DMs.")
         )
 
+        trace_content = (
+            "```py\n\nTraceback (most recent call last):"
+            "\n{}{}: {}```").format(
+                _traceback,
+                type(error).__name__,
+                error)
+
         error_embed.add_field(
             name="`{}` in command `{}`".format(
                 type(error).__name__, ctx.command.qualified_name),
-            value=(
-                "```py\nTraceback (most recent call last):"
-                "\n{}{}: {}```").format(
-                    _traceback,
-                    type(error).__name__,
-                    error))
-
+            value=(trace_content[:1018] + '...```') if len(trace_content) > 1024
+                else trace_content)
         await ctx.send(embed_fallback, embed=error_embed)
 
     elif isinstance(error, commands_errors.CommandOnCooldown):

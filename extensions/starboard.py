@@ -57,7 +57,7 @@ class Starboard:
             if count >= min_count:
                 e = discord.Embed(colour=r.message.author.color)
                 e.set_author(
-                    name=str(r.message.author),
+                    name=str(r.message.author.display_name),
                     icon_url=r.message.author.avatar_url_as(format='png'))
                 e.description = r.message.content
                 e.timestamp = datetime.datetime.utcnow()

@@ -187,17 +187,52 @@ class Utility:
             msg = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
             if msg.content == 'y':
                 await prompt.delete()
-                await self.bot.change_presence(status=discord.Status.dnd, game=discord.Game(name='Bot is currently being maintained. Please check back later.'))
+                await self.bot.change_presence(status=discord.Status.dnd, game = None)
                 self.bot.maintenance = True
-                await ctx.send(':white_check_mark: Bot now in maintenance mode.')
+                await ctx.send(':white_check_mark: Bot in maintenance mode.')
                 return
             else:
                 await prompt.delete()
                 await ctx.send('Prompt exited.')
         elif bools == False:
             self.bot.maintenance = False
-            await self.bot.change_presence(status=discord.Status.online, game=None)
-            await ctx.send(':white_check_mark: Bot not in maintenance mode anymore.')
+            await self.bot.change_presence(game=discord.Game(
+                name=f'{self.bot.prefix[0]}help',
+                type=2))
+            await ctx.send(':white_check_mark: Bot in regular mode.')
+
+    @commands.command()
+    @permissions.owner()
+    async def git(self, ctx, sub, flags=""):
+        """Runs some git commands in Discord."""
+
+        if sub == "gud":
+            if not flags:
+                return await ctx.send("```You are now so gud!```")
+            else:
+                return await ctx.send(
+                    "```{} is now so gud!```".format(flags))
+        elif sub == "rekt":
+            if not flags:
+                return await ctx.send("```You got #rekt!```")
+            else:
+                return await ctx.send(
+                     "```{} got #rekt!```".format(flags))
+        else:
+            process_msg = await ctx.send(
+                "<a:typing:401162479041773568> Processing...")
+            process = subprocess.Popen(
+                f"git {sub + flags}",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            res = process.communicate()
+            if res[0] == b'':
+                content = "Successful!"
+            else:
+                content = res[0].decode("utf8")
+            return await process_msg.edit(content=f"```{content}```")
+
+
 
 
 def setup(bot):
