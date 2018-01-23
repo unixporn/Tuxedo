@@ -2,18 +2,18 @@ from discord.ext import commands
 
 
 def is_owner_check(ctx):
-    return str(ctx.message.author.id) in ctx.bot.config.get('OWNERS')
+    return str(ctx.author.id) in ctx.bot.config.get('OWNERS')
 
 
 def is_moderator_check(ctx):
-    for role in ctx.message.author.roles:
+    for role in ctx.author.roles:
         if str(role.id) is ctx.bot.config.get('MOD_ROLES'):
             return True
     return False
 
 
 def is_helper_check(ctx):
-    for role in ctx.message.author.roles:
+    for role in ctx.author.roles:
         if (str(role.id) in ctx.bot.config.get('MOD_ROLES')) or (
                 str(role.id) in ctx.bot.config.get('HELPER_ROLES')):
             return True

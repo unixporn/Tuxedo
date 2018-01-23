@@ -237,7 +237,7 @@ class ModLogs:
             roles.append(role)
         return roles
 
-    @commands.command(name='set', aliases=['settings', 'setup', 'setting'])
+    @commands.command(name='set', aliases=['settings', 'setting'])
     async def _set(self, ctx, *args):
         settings_str = ', '.join(settings)
         if len(args) <= 0:
