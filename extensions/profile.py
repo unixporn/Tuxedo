@@ -1,4 +1,3 @@
-import discord
 import asyncio
 from discord.ext import commands
 from discord import utils as dutils
@@ -20,7 +19,7 @@ class Profile:
         block_top = dutils.get(ctx.guild.roles, name="------- setups -------")
 
         for item in args:
-            roles = [existing for existing in ctx.guild.roles 
+            roles = [existing for existing in ctx.guild.roles
                      if existing.name.lower() == item.lower()]
             try:
                 role = roles[0]
@@ -45,7 +44,7 @@ class Profile:
         if to_request != []:
             try:
                 if permissions.is_helper_check(ctx):
-                    override = True  
+                    override = True
                 else:
                     def react_check(r, u):
                         for role in u.roles:
@@ -95,6 +94,7 @@ class Profile:
 
         await ctx.send(
             f"\u2705 {ctx.author.mention} Setup accepted!")
+
 
 def setup(bot):
     bot.add_cog(Profile(bot))

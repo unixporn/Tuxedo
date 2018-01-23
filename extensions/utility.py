@@ -465,26 +465,33 @@ class Utility:
         if len(result) >= 2 and result[1] not in [None, b'']:
             stderr = result[1].decode('utf-8')
         string = ""
-        if len(result) >= 1:
+        if len(result) >= 1 or len(result) >= 2:
             if (len(result[0]) >= 1024):
                 stdout = result[0].decode('utf-8')
                 string = string + f'[[STDOUT]]\n{stdout}'
                 link = await self.post_to_hastebin(string)
-                return await ctx.send(link)
-        if len(result) >= 2:
+            else:
+                link = None
             if (len(result[1]) >= 1024):
                 stdout = result[0].decode('utf-8')
                 string = string + f'[[STDERR]]\n{stdout}'
                 link = await self.post_to_hastebin(string)
-                return await ctx.send(link)
-        embed.add_field(
-            name="stdout",
-            value=f'```{stdout}```' if 'stdout' in locals() else 'No output.',
-            inline=False)
-        embed.add_field(
-            name="stderr",
-            value=f'```{stderr}```' if 'stderr' in locals() else 'No output.',
-            inline=False)
+            else:
+                link = None
+
+        if link is None:
+            embed.content = f"[Content too long. Posted to hastebin.]({link})"
+        else:
+            embed.add_field(
+                name="stdout",
+                value=f'```{stdout}```' if 'stdout' in locals() 
+                        else 'No output.',
+                inline=False)
+            embed.add_field(
+                name="stderr",
+                value=f'```{stderr}```' if 'stderr' in locals() 
+                        else 'No output.',
+                inline=False)
         await message.edit(content='', embed=embed)
 
     @commands.command(aliases=['game', 'status'])
