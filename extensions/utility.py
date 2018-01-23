@@ -44,14 +44,14 @@ class Utility:
 
     async def post_to_hastebin(self, string):
         '''Posts a string to hastebin.'''
-        # url = "https://hastebin.com/documents"
-        # data = string.encode('utf-8')
-        # async with self.aioclient.post(url=url, data=data) as haste_response:
-        #     haste_key = (await haste_response.json())['key']
-        #     haste_url = f"http://hastebin.com/{haste_key}"
-        data = {'sprunge': ''}
-        data['sprunge'] = string
-        haste_url = await self.aioclient.post(url='http://sprunge.us', data=data)
+        url = "https://hastebin.com/documents"
+        data = string.encode('utf-8')
+        async with self.aioclient.post(url=url, data=data) as haste_response:
+            haste_key = (await haste_response.json())['key']
+            haste_url = f"http://hastebin.com/{haste_key}"
+        # data = {'sprunge': ''}
+        # data['sprunge'] = string
+        # haste_url = await self.aioclient.post(url='http://sprunge.us', data=data)
         return haste_url
 
     @commands.group(name='shell',
