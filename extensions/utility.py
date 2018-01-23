@@ -471,7 +471,7 @@ class Utility:
                 string = string + f'[[STDOUT]]\n{stdout}'
                 link = await self.post_to_hastebin(string)
                 await message.edit(
-                    content=f":x: Content too long. {link}.",
+                    content=f":x: Content too long. {link}",
                     embed=None)
                 return
         if len(result) >= 2:
@@ -480,7 +480,7 @@ class Utility:
                 string = string + f'[[STDERR]]\n{stdout}'
                 link = await self.post_to_hastebin(string)
                 await message.edit(
-                    content=f":x: Content too long. {link}.",
+                    content=f":x: Content too long. {link}",
                     embed=None)
                 return
         embed.add_field(
