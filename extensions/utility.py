@@ -51,7 +51,7 @@ class Utility:
         #     haste_url = f"http://hastebin.com/{haste_key}"
         data = {'sprunge': ''}
         data['sprunge'] = string
-        haste_url = await self.aioclient.post('http://sprunge.us', data)
+        haste_url = await self.aioclient.post(url='http://sprunge.us', data=data)
         return haste_url
 
     @commands.group(name='shell',
