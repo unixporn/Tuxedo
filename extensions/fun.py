@@ -43,30 +43,6 @@ class Fun:
         else:
             return "th"
 
-    @commands.command(hidden=True)
-    async def feelgood(self, ctx):
-        """press"""
-        await ctx.send('*pressed*')
-
-    @commands.command(hidden=True)
-    async def feelbad(self, ctx):
-        """depress"""
-        await ctx.send('*depressed*')
-
-    @commands.command(hidden=True)
-    async def love(self, ctx):
-        """What is love?"""
-        action = random.choice(
-            [ctx.send('https://www.youtube.com/watch?v=HEXWRTEbj1I'),
-             ctx.invoke(self.g, query='define: love')])
-
-        await action
-
-    @commands.command(hidden=True)
-    async def bored(self, ctx):
-        """boredom looms"""
-        await ctx.send('http://i.imgur.com/BuTKSzf.png')
-
     @commands.command()
     async def cat(self, ctx):
         with ctx.channel.typing():
@@ -203,7 +179,8 @@ class Fun:
     async def egg(self, ctx, time: int=180, emote: str='🥚⏲'):
         if time > 300 or time < 5:
             return await ctx.send(
-                'Maximum time allowed is 5 minutes (300 seconds). Minimum time allowed is 5 seconds.')
+                'Maximum time allowed is 5 minutes (300 seconds). '
+                'Minimum time allowed is 5 seconds.')
         await ctx.send(emote)
         await asyncio.sleep(time)
         m = await ctx.send(ctx.author.mention)

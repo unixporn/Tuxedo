@@ -61,6 +61,7 @@ class Bot(commands.Bot):
         if (not permissions.owner_id_check(self, str(message.author.id))
                 and self.maintenance):
             return
+        await self.get_context(message)
         await self.process_commands(message)
 
     def init_rethinkdb(self):
@@ -116,6 +117,9 @@ print("bot created.\n")
 async def on_command_error(ctx, error):
     if isinstance(error, commands_errors.MissingRequiredArgument):
         await cmd_help(ctx)
+
+    elif isinstance(error, commands_errors.CommandNotFound):
+        await ctx.message.add_reaction(u"\u2753")
 
     elif isinstance(error, commands_errors.CommandInvokeError):
         error = error.original
