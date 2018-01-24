@@ -309,16 +309,16 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
             for i in member.roles:
                 if i != g.default_role:
                     self.rolebans[member.id][ctx.guild.id].append(i)
-            await member.edit(roles=[role], reason=f'[{str(ctx.author)}] {reason}' if reason != None else f'[Roleban by {str(ctx.author)}]')
+            await member.edit(roles=[role], reason=f'[{str(ctx.author)}] {reason}' if reason != None else f'[Timeout by {str(ctx.author)}]')
             prevroles = ', '.join(
                 [i.name for i in self.rolebans[member.id][ctx.guild.id]])
             if prevroles == '':
                 prevroles = 'None'
             await ctx.send(
-                f'**{member.name}**#{member.discriminator} ({member.id}) has been rolebanned.\nPrevious roles: {prevroles}')
+                f'**{member.name}**#{member.discriminator} ({member.id}) has been timed out.\nPrevious roles: {prevroles}')
             if type(channel) == discord.TextChannel:
                 await channel.send(
-                    f'**{member.name}**#{member.discriminator} ({member.id}) has just been rolebanned in <#{ctx.channel.id}>.\nTheir previous roles were: {prevroles}')
+                    f'**{member.name}**#{member.discriminator} ({member.id}) has just been timed out in <#{ctx.channel.id}>.\nTheir previous roles were: {prevroles}')
         else:
             return await ctx.send(
                 ':x: Not enough permissions. You need '
@@ -439,13 +439,12 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
         await msg.delete()
 
     @commands.command()
+    @permissions.helper()
     async def kick(self, ctx, member: discord.Member, *, reason: str=None):
         """Kicks a member. You can specify a reason."""
         if ctx.author == member:
             return await ctx.send(
                 'Don\'t kick yourself, please.', delete_after=3)
-        if not ctx.author.permissions_in(ctx.channel).kick_members:
-            return await ctx.send(':x: You need Kick Members.', delete_after=3)
         if ctx.author.top_role <= member.top_role:
             return await ctx.send(
                 ':x: You can\'t kick someone with a higher role than you!',

@@ -352,9 +352,10 @@ class Utility:
                 await self.bot.user.edit(avatar=await r.read())
                 await ctx.send(":ok_hand:")
 
-    @commands.command(aliases=["ev", "e"])
+    @commands.command(name='eval',
+                      aliases=["ev", "e"])
     @permissions.owner()
-    async def eval(self, ctx, *, code: str):
+    async def eval_cmd(self, ctx, *, code: str):
         """Evaluates Python code"""
         if self._eval.get('env') is None:
             self._eval['env'] = {}
