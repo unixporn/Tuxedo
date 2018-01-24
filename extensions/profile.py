@@ -63,8 +63,8 @@ class Profile:
                         ctx.guild.channels,
                         id=int(self.bot.config["STAFF_CHANNEL"]))
                     request_msg = await staff_channel.send(
-                        "\u274C @here Please verify roles:\n\n"
-                        f"`{', '.join(to_request)}`\n\n")
+                        f"\u274C @here Please verify roles for `{ctx.author}`:"
+                        f"\n\n`{', '.join(to_request)}`\n\n")
                     await request_msg.add_reaction("\u2705")
                     await request_msg.add_reaction("\u274C")
                     event = await self.bot.wait_for(
