@@ -5,13 +5,13 @@ async def is_owner_check(ctx):
     if str(ctx.author.id) in ctx.bot.config.get('OWNERS'):
         return True
     await ctx.send(":x: Must be a bot owner.",
-             delete_after=3)
+                   delete_after=3)
     return False
 
 
 async def is_moderator_check(ctx):
     for role in ctx.author.roles:
-        if str(role.id) is ctx.bot.config.get('MOD_ROLES'):
+        if str(role.id) in ctx.bot.config.get('MOD_ROLES'):
             return True
     await ctx.send(":x: Must be a moderator.",
                    delete_after=3)
