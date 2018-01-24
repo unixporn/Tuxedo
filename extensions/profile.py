@@ -54,13 +54,14 @@ class Profile:
                                     'HELPER_ROLES')):
                                 return True
                         return False
+
                     confirm_msg = await ctx.send(
                         "\u274C Some roles were not found:\n\n"
                         f"`{', '.join(to_request)}`\n\n"
-                        f"A <@&400882287169896451> will be along to verify.")
+                        f"A staff member will verify shortly.")
                     staff_channel = dutils.get(
-                        ctx.guild.channels, 
-                        id=self.bot.config["STAFF_CHANNEL"])
+                        ctx.guild.channels,
+                        id=int(self.bot.config["STAFF_CHANNEL"]))
                     request_msg = await staff_channel.send(
                         "\u274C @here Please verify roles:\n\n"
                         f"`{', '.join(to_request)}`\n\n")
