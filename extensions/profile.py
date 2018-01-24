@@ -58,8 +58,14 @@ class Profile:
                         "\u274C Some roles were not found:\n\n"
                         f"`{', '.join(to_request)}`\n\n"
                         f"A <@&400882287169896451> will be along to verify.")
-                    await confirm_msg.add_reaction("\u2705")
-                    await confirm_msg.add_reaction("\u274C")
+                    staff_channel = dutils.get(
+                        ctx.guild.channels, 
+                        id=self.bot.config["STAFF_CHANNEL"])
+                    request_msg = await staff_channel.send(
+                        "\u274C @here Please verify roles:\n\n"
+                        f"`{', '.join(to_request)}`\n\n")
+                    await request_msg.add_reaction("\u2705")
+                    await request_msg.add_reaction("\u274C")
                     event = await self.bot.wait_for(
                         'reaction_add',
                         timeout=300.0,

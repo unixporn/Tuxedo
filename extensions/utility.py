@@ -431,7 +431,10 @@ class Utility:
         except discord.HTTPException:
             if not silent:
                 with aiohttp.ClientSession() as sesh:
-                    async with sesh.post("https://hastebin.com/documents/", data=output, headers={"Content-Type": "text/plain"}) as r:
+                    async with sesh.post(
+                            "https://hastebin.com/documents/", 
+                            data=output, 
+                            headers={"Content-Type": "text/plain"}) as r:
                         r = await r.json()
                         embed = discord.Embed(
                             description=(
