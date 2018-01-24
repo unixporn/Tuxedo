@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 
-def is_owner_check(ctx):
+async def is_owner_check(ctx):
     if str(ctx.author.id) in ctx.bot.config.get('OWNERS'):
         return True
     await ctx.send(":x: Must be a bot owner.",
@@ -9,7 +9,7 @@ def is_owner_check(ctx):
     return False
 
 
-def is_moderator_check(ctx):
+async def is_moderator_check(ctx):
     for role in ctx.author.roles:
         if str(role.id) is ctx.bot.config.get('MOD_ROLES'):
             return True
@@ -18,7 +18,7 @@ def is_moderator_check(ctx):
     return False
 
 
-def is_helper_check(ctx):
+async def is_helper_check(ctx):
     for role in ctx.author.roles:
         if (str(role.id) in ctx.bot.config.get('MOD_ROLES')) or (
                 str(role.id) in ctx.bot.config.get('HELPER_ROLES')):
