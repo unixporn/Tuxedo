@@ -266,66 +266,61 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
         await ctx.send(f':ok_hand: {", ".join([f"**{i.name}**#{i.discriminator}" for i in people])} {"has" if len(people) == 1 else "have"} been unmuted.')
 
     @commands.command(aliases=['to', 'toss'])
+    @permissions.helper()
     async def timeout(self, ctx, member: discord.Member, *, reason: str=None):
         'Timeouts a member. You can specify a reason.'
         g = ctx.guild
-        perms = ctx.author.permissions_in(ctx.channel)
         perms_mem = member.permissions_in(ctx.channel)
-        if perms.manage_roles or perms.kick_members or perms.ban_members:
-            exists = (lambda: list(r.table('settings').filter(
-                lambda a: a['guild'] == str(g.id)).run(self.conn)) != [])()
-            if not exists:
-                return
-            # we know the guild has an entry in the settings
-            if (perms_mem.manage_roles or perms_mem.kick_members or perms_mem.ban_members) or (
-                    not ctx.author.top_role > member.top_role):
-                await ctx.send(':x: You can\'t roleban a mod.', delete_after=3)
-                return
-            settings = list(r.table('settings').filter(
-                lambda a: a['guild'] == str(g.id)).run(self.conn))[0]
-            channel = None
-            if 'rolebanned_role' not in settings.keys():
-                return await ctx.send(
-                    f':x: You haven\'t set up a rolebanned role. Please use `{ctx.prefix}set rolebanned_role <role name>`')
-            if 'staff_channel' in settings.keys():
-                channel = ctx.guild.get_channel(int(settings['staff_channel']))
-            role = self.get_role(ctx.guild, int(settings['rolebanned_role']))
-            try:
-                meme = self.rolebans[member.id][ctx.guild.id]
-                if meme != [] and meme != None or role in member.roles:
-                    return await ctx.send(
-                        ':x: This member is already rolebanned.',
-                        delete_after=3)
-            except KeyError:
-                pass
-            try:
-                aa = self.rolebans[member.id]
-                if aa == None:
-                    self.rolebans[member.id] = {}
-            except KeyError:
-                self.rolebans[member.id] = {}
-            self.rolebans[member.id][ctx.guild.id] = []
-
-            for i in member.roles:
-                if i != g.default_role:
-                    self.rolebans[member.id][ctx.guild.id].append(i)
-            await member.edit(roles=[role], reason=f'[{str(ctx.author)}] {reason}' if reason != None else f'[Timeout by {str(ctx.author)}]')
-            prevroles = ', '.join(
-                [i.name for i in self.rolebans[member.id][ctx.guild.id]])
-            if prevroles == '':
-                prevroles = 'None'
-            await ctx.send(
-                f'**{member.name}**#{member.discriminator} ({member.id}) has been timed out.\nPrevious roles: {prevroles}')
-            if type(channel) == discord.TextChannel:
-                await channel.send(
-                    f'**{member.name}**#{member.discriminator} ({member.id}) has just been timed out in <#{ctx.channel.id}>.\nTheir previous roles were: {prevroles}')
-        else:
+        exists = (lambda: list(r.table('settings').filter(
+            lambda a: a['guild'] == str(g.id)).run(self.conn)) != [])()
+        if not exists:
+            return
+        # we know the guild has an entry in the settings
+        if (perms_mem.manage_roles or perms_mem.kick_members or perms_mem.ban_members) or (
+                not ctx.author.top_role > member.top_role):
+            await ctx.send(':x: You can\'t roleban a mod.', delete_after=3)
+            return
+        settings = list(r.table('settings').filter(
+            lambda a: a['guild'] == str(g.id)).run(self.conn))[0]
+        channel = None
+        if 'rolebanned_role' not in settings.keys():
             return await ctx.send(
-                ':x: Not enough permissions. You need '
-                'Manage Roles, Kick Members or Ban Members.',
-                delete_after=3)
+                f':x: You haven\'t set up a rolebanned role. Please use `{ctx.prefix}set rolebanned_role <role name>`')
+        if 'staff_channel' in settings.keys():
+            channel = ctx.guild.get_channel(int(settings['staff_channel']))
+        role = self.get_role(ctx.guild, int(settings['rolebanned_role']))
+        try:
+            meme = self.rolebans[member.id][ctx.guild.id]
+            if meme != [] and meme != None or role in member.roles:
+                return await ctx.send(
+                    ':x: This member is already rolebanned.',
+                    delete_after=3)
+        except KeyError:
+            pass
+        try:
+            aa = self.rolebans[member.id]
+            if aa == None:
+                self.rolebans[member.id] = {}
+        except KeyError:
+            self.rolebans[member.id] = {}
+        self.rolebans[member.id][ctx.guild.id] = []
+
+        for i in member.roles:
+            if i != g.default_role:
+                self.rolebans[member.id][ctx.guild.id].append(i)
+        await member.edit(roles=[role], reason=f'[{str(ctx.author)}] {reason}' if reason != None else f'[Timeout by {str(ctx.author)}]')
+        prevroles = ', '.join(
+            [i.name for i in self.rolebans[member.id][ctx.guild.id]])
+        if prevroles == '':
+            prevroles = 'None'
+        await ctx.send(
+            f'**{member.name}**#{member.discriminator} ({member.id}) has been timed out.\nPrevious roles: {prevroles}')
+        if type(channel) == discord.TextChannel:
+            await channel.send(
+                f'**{member.name}**#{member.discriminator} ({member.id}) has just been timed out in <#{ctx.channel.id}>.\nTheir previous roles were: {prevroles}')
 
     @commands.command(aliases=['uto', 'untoss'])
+    @permissions.helper()
     async def release(self, ctx, member: discord.Member, *, reason: str=None):
         'Unmutes a member. You can specify a reason.'
         g = ctx.guild
@@ -462,15 +457,9 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
         await msg.delete()
 
     @commands.command()
+    @permissions.helper()
     async def dehoist(self, ctx, member: discord.Member, *, flags: str=None):
         'Remove a hoisting member\'s hoist.'
-        if not ctx.author.permissions_in(ctx.channel).manage_nicknames:
-            sorry_msg = await ctx.send(
-                ':x: You need Manage Nicknames.', delete_after=3)
-            await asyncio.sleep(3)
-            return await sorry_msg.delete()
-
-
         if (ctx.author.top_role <= member.top_role 
                 or ctx.me.top_role <= member.top_role):
             return await ctx.send(
@@ -505,6 +494,7 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
         return string
 
     @commands.command()
+    @permissions.helper()
     async def clean(self, ctx, amount: int=50):
         """Clean up the bot's messages."""
         deleted = await ctx.channel.purge(
@@ -516,13 +506,9 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
         return await confirm_msg.delete()
 
     @commands.command(aliases=["prune"])
+    @permissions.helper()
     async def purge(self, ctx, amount: int=50, *flags):
         """Purge messages in the channel."""
-        if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            sorry_msg = await ctx.send(
-                ':x: You need Manage Messages.', delete_after=3)
-            await asyncio.sleep(3)
-            return await sorry_msg.delete()
 
         meme = switches.parse(' '.join(flags))
         bots = (lambda: 'bots' in meme[0].keys())()
@@ -541,11 +527,9 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
 
     @commands.command(description="Ban a user, even when not in the server.",
                       aliases=['shadowban', 'hban'])
+    @permissions.moderator()
     async def hackban(self, ctx, user: int, *, reason: str=None):
         'Ban someone, even when not in the server.'
-
-        if not ctx.author.permissions_in(ctx.channel).ban_members:
-            await ctx.send(':x: You need Ban Members.', delete_after=3)
 
         await ctx.bot.http.ban(user, ctx.guild.id, 7, reason=f'[{str(ctx.author)}] {reason}' if reason else f'Hackban by {str(ctx.author)}')
         msg = await ctx.send(':ok_hand:')
