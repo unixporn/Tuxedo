@@ -121,6 +121,11 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands_errors.CommandNotFound):
         await ctx.message.add_reaction(u"\u2753")
 
+    elif isinstance(error, permissions.WrongRole):
+        await ctx.send(
+            f":x: You must be a(n) {error}.",
+            delete_after=3)
+
     elif isinstance(error, commands_errors.CommandInvokeError):
         error = error.original
         _traceback = traceback.format_tb(error.__traceback__)
