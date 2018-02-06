@@ -55,7 +55,7 @@ class Profile:
                                 return True
                         return False
 
-                    await ctx.send(override)
+
                     confirm_msg = await ctx.send(
                         "\u274C Some roles were not found:\n\n"
                         f"`{', '.join(to_request)}`\n\n"
@@ -78,6 +78,7 @@ class Profile:
                     "Please contact a staff member directly at a later date.",
                     delete_after=30)
             else:
+                await ctx.send(override)
                 try:
                     accept = (event[0].emoji == "\u2705")
                 except NameError:
