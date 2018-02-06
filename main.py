@@ -47,10 +47,6 @@ class Bot(commands.Bot):
 
     async def on_ready(self):
         print(f'Logged in as {self.user.name}')
-        await self.change_presence(
-            game=discord.Game(
-                name=f'{self.prefix[0]}help',
-                type=2))
         self.load_extension('extensions.core')
 
     async def on_message(self, message):

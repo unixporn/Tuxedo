@@ -344,6 +344,16 @@ class Utility:
             pass
         await shell.edit(embed=self.repl_embeds[shell])
 
+    @commands.command(name="announce")
+    @permissions.owner()
+    async def global_announce(self, ctx, content: str):
+        for guild in self.bot.guilds:
+            for channel in guild.text_channels:
+                if channel.permissions_for(guild.me).send_messages:
+                    await channel.send(
+                        content=content)
+                    break
+
     @commands.command(name="setavy")
     @permissions.owner()
     async def set_avy(self, ctx, *, avy: str):

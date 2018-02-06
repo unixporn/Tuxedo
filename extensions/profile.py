@@ -55,6 +55,7 @@ class Profile:
                                 return True
                         return False
 
+                    await ctx.send(override)
                     confirm_msg = await ctx.send(
                         "\u274C Some roles were not found:\n\n"
                         f"`{', '.join(to_request)}`\n\n"
