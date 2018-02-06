@@ -43,18 +43,17 @@ class Profile:
         await ctx.author.add_roles(*to_add)
         if to_request != []:
             try:
-                if permissions.is_helper_check(ctx):
+                def helper_check(r, u):
+                    for role in u.roles:
+                        if (str(role.id) in self.bot.config.get(
+                                'MOD_ROLES')) or (
+                            str(role.id) in self.bot.config.get(
+                                'HELPER_ROLES')):
+                            return True
+                    return False
+                if helper_check(None, ctx.author):
                     override = True
                 else:
-                    def react_check(r, u):
-                        for role in u.roles:
-                            if (str(role.id) in self.bot.config.get(
-                                    'MOD_ROLES')) or (
-                                str(role.id) in self.bot.config.get(
-                                    'HELPER_ROLES')):
-                                return True
-                        return False
-
 
                     confirm_msg = await ctx.send(
                         "\u274C Some roles were not found:\n\n"
@@ -78,7 +77,6 @@ class Profile:
                     "Please contact a staff member directly at a later date.",
                     delete_after=30)
             else:
-                await ctx.send(override)
                 try:
                     accept = (event[0].emoji == "\u2705")
                 except NameError:
