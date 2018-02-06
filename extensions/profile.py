@@ -70,7 +70,7 @@ class Profile:
                     event = await self.bot.wait_for(
                         'reaction_add',
                         timeout=300.0,
-                        check=react_check)
+                        check=helper_check)
             except asyncio.TimeoutError:
                 await ctx.send(
                     f"\u274C {ctx.author.mention} Your request timed out. "
