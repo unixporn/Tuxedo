@@ -1,3 +1,5 @@
+"""Profile Extension"""
+
 import asyncio
 from discord.ext import commands
 from discord import utils as dutils
@@ -5,6 +7,8 @@ from utils import permissions
 
 
 class Profile:
+    """Commands to set up roles and colors."""
+
     def __init__(self, bot):
         self.bot = bot
 
