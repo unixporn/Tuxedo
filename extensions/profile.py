@@ -47,6 +47,7 @@ class Profile:
         await ctx.author.add_roles(*to_add)
         if to_request != []:
             try:
+
                 def helper_check(r, u):
                     for role in u.roles:
                         if (str(role.id) in self.bot.config.get(
@@ -55,10 +56,10 @@ class Profile:
                                 'HELPER_ROLES')):
                             return True
                     return False
+
                 if helper_check(None, ctx.author):
                     override = True
                 else:
-
                     confirm_msg = await ctx.send(
                         "\u274C Some roles were not found:\n\n"
                         f"`{', '.join(to_request)}`\n\n"

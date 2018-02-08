@@ -49,6 +49,10 @@ upmo-discord.ppk
 rethinkdb_data
 rethinkdb_data/
 
+# VSCODE #
+##########
+.vscode/settings.json
+
 # pycache because taci said so #
 ################################
 extensions/__pycache__/
