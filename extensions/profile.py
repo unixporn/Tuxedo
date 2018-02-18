@@ -25,7 +25,7 @@ class Profile:
                       aliases=['desktop', 'rice'])
     async def desktop_setup(self, ctx, *requested: str):
         """Adds setup tags to a user, dynamically."""
-        group = roles.get_group(ctx, 'setups')
+        group = await roles.get_group(ctx, 'setups')
 
         # Role Holders
         to_add = []
