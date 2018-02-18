@@ -924,7 +924,7 @@ class Utility:
         poll_msg = await ctx.send(poll)
         for emoji in emojis:
             try:
-                poll_msg.add_reaction(emoji)
+                await poll_msg.add_reaction(emoji)
             except discord.NotFound:
                 pass
 
