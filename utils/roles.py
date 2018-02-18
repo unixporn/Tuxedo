@@ -12,7 +12,7 @@ class UnknownRole(commands.CommandError):
 async def get_group(ctx, group: str) -> List[discord.Role]:
     """Retrieves a group of roles via separator role."""
     group_name = f"------- {group} -------"
-    separator = await dutils.get(ctx.guild.roles, name=group_name)
+    separator = dutils.get(ctx.guild.roles, name=group_name)
     if not separator:
         raise UnknownRole(group_name)
     group_roles = []

@@ -907,13 +907,15 @@ class Utility:
 
             await ctx.send(answer)
 
-    @commands.command()
+    @commands.command(aliases=['contest', 'vote'])
     async def poll(self, ctx, question: str, time: int=120,
                    *emojis: Union[discord.Emoji, str]):
         """Creates a poll with reaction options."""
-        if len(emojis) == 0:  # Don't want an empty poll
+        emojis = set(emojis)  # Remove duplicates
+        if len(emojis) <= 1:
             return await ctx.send(
-                "\u274C Cannot start optionless poll.", delete_after=3)
+                "\u274C Cannot start poll with one option or less.",
+                delete_after=3)
 
         # Initial poll message
         poll = (

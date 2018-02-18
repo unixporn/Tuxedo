@@ -3,6 +3,7 @@ from discord.ext.commands.errors import BadArgument
 import emoji
 import asyncio
 
+
 class EmojiStrConverter(commands.Converter):
     """Converts to a :class:`Union[discord.Emoji, str]`."""
     @asyncio.coroutine
