@@ -901,11 +901,11 @@ class Utility:
 
             if next_two:
                 formatted = '\n'.join(f'<{x}>' for x in next_two)
-                poll = f'{first_entry}\n\n**See also:**\n{formatted}'
+                answer = f'{first_entry}\n\n**See also:**\n{formatted}'
             else:
-                poll = first_entry
+                answer = first_entry
 
-            await ctx.send(poll)
+            await ctx.send(answer)
 
     @commands.command()
     async def poll(self, ctx, question: str, time: int=120,
@@ -919,13 +919,13 @@ class Utility:
         poll = (
             f"**{ctx.author.mention}** asks: {question}\n\n"
             f"_Poll active for {time} seconds. React below to vote._")
-
-        poll_msg = await ctx.send(poll)
-        for emoji in emojis:
-            try:
-                await poll_msg.add_reaction(emoji)
-            except discord.NotFound:
-                pass
+        async with ctx.channel.typing():
+            poll_msg = await ctx.send(poll)
+            for emoji in emojis:
+                try:
+                    await poll_msg.add_reaction(emoji)
+                except discord.NotFound:
+                    pass
 
         asyncio.sleep(time)  # Users are reacting
 
