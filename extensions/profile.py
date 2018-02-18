@@ -1,6 +1,7 @@
 """Profile Extension"""
 
 import asyncio
+import discord
 from discord.ext import commands
 from discord import utils as dutils
 from utils import permissions, roles
