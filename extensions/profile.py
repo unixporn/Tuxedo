@@ -1,5 +1,6 @@
 """Profile Extension"""
 
+import discord
 import asyncio
 from discord.ext import commands
 from discord import utils as dutils
@@ -33,9 +34,9 @@ class Profile:
         to_deny = []
 
         # Block indicators
-        group.top = group[0]
+        group_top = group[0]
         group.remove(0)
-        group.bottom = group[-1]
+        group_bottom = group[-1]
         group.remove(-1)
 
         # Stringify and lowercase
@@ -51,8 +52,8 @@ class Profile:
                 to_request.append(request)
                 pass
             # Within group?
-            if (role.position >= group.top.position or
-                    role.position <= group.bottom.position):
+            if (role.position >= group_top.position or
+                    role.position <= group_bottom.position):
                 to_deny.append(role)
             else:
                 to_add.append(role)
@@ -126,6 +127,10 @@ class Profile:
         await ctx.send(
             f"\u2705 {ctx.author.mention} Setup accepted!")
 
+    @commands.command
+    async def give_color(self, ctx, color: discord.Color):
+        """Gives user a custom color role."""
+        ...
 
 def setup(bot):
     bot.add_cog(Profile(bot))

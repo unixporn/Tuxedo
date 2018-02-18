@@ -1,3 +1,5 @@
+"""Roles Util"""
+
 import discord
 from discord.ext import commands
 import discord.utils as dutils
