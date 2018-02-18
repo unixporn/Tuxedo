@@ -35,9 +35,8 @@ class Profile:
 
         # Block indicators
         group_top = group[0]
-        group.remove(0)
         group_bottom = group[-1]
-        group.remove(-1)
+        del group[0], group[-1]
 
         # Stringify and lowercase
         requested = [arg.lower for arg in requested]
