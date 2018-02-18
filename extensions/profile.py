@@ -121,7 +121,8 @@ class Profile:
             f"\u2705 {ctx.author.mention} Setup accepted!")
 
     @commands.command
-    async def give_color(self, ctx, color: )
+    async def give_color(self, ctx, color: discord.Color):
+        ...
 
 
 def setup(bot):
