@@ -912,16 +912,14 @@ class Utility:
                    *emojis: Union[discord.Emoji, str]):
         """Creates a poll with reaction options."""
         if len(emojis) == 0:  # Don't want an empty poll
-            await ctx.send("\u274C Cannot start optionless poll.",
-                           delete_after=3)
-            return
+            return await ctx.send(
+                "\u274C Cannot start optionless poll.", delete_after=3)
 
         # Initial poll message
         poll = (
             f"**{ctx.author.mention}** asks: {question}\n\n"
             f"_Poll active for {time} seconds. React below to vote._")
 
-        await ctx.send("got this far...")
         poll_msg = await ctx.send(poll)
         for emoji in emojis:
             try:
