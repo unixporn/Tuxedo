@@ -23,9 +23,9 @@ class Profile:
 
     @commands.command(name='setup',
                       aliases=['desktop', 'rice'])
-    async def desktop_setup(self, ctx, *requested: str):
+    async def give_setup(self, ctx, *requested: str):
         """Adds setup tags to a user, dynamically."""
-        group = await roles.get_group(ctx, 'setups')
+        group = roles.get_group(ctx, 'setups')
 
         # Role Holders
         to_add = []
@@ -51,7 +51,7 @@ class Profile:
             else:
                 to_add.append(role)
 
-        if to_deny != []:
+        if to_deny:
             await ctx.send(
                 "\u274C Some roles could not be added:\n\n"
                 f"`{', '.join([role.name for role in to_deny])}`\n\n"
@@ -119,6 +119,9 @@ class Profile:
 
         await ctx.send(
             f"\u2705 {ctx.author.mention} Setup accepted!")
+
+    @commands.command
+    async def give_color(self, ctx, color: )
 
 
 def setup(bot):
