@@ -15,6 +15,7 @@ from lxml import etree
 import textwrap
 import rethinkdb as r
 from urllib.parse import quote as uriquote
+from typing import Union
 
 
 class Utility:
@@ -527,8 +528,8 @@ class Utility:
 
         if bools == True:
             prompt = await ctx.send('```Are you sure you want to do this? This will make the bot stop responding to anyone but you!\n\n[y]: Enter Maintenance mode\n[n]: Exit prompt```')
-            msg = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
-            if msg.content == 'y':
+            poll = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
+            if poll.content == 'y':
                 await prompt.delete()
                 await self.bot.change_presence(status=discord.Status.dnd, game=None)
                 self.bot.maintenance = True
@@ -873,7 +874,7 @@ class Utility:
         return card, entries
 
     @commands.command(aliases=['g', 'search'])
-    async def google(self, ctx, *, query):
+    async def google(self, ctx, query: str):
         """Searches google and gives you top result."""
         await ctx.trigger_typing()
         try:
@@ -883,7 +884,8 @@ class Utility:
         else:
             if card:
                 value = '\n'.join(
-                    f'[{title}]({url.replace(")", "%29")})' for url, title in entries[:3])
+                    f'[{title}]({url.replace(")", "%29")})'
+                    for url, title in entries[:3])
                 if value:
                     card.add_field(name='Search Results',
                                    value=value, inline=False)
@@ -899,11 +901,43 @@ class Utility:
 
             if next_two:
                 formatted = '\n'.join(f'<{x}>' for x in next_two)
-                msg = f'{first_entry}\n\n**See also:**\n{formatted}'
+                poll = f'{first_entry}\n\n**See also:**\n{formatted}'
             else:
-                msg = first_entry
+                poll = first_entry
 
-            await ctx.send(msg)
+            await ctx.send(poll)
+
+    @commands.command()
+    async def poll(self, ctx, question: str, time: int=120,
+                   *emojis: Union[discord.Emoji, str]):
+        """Creates a poll with reaction options."""
+        if len(emojis) == 0:  # Don't want an empty poll
+            await ctx.send("\u274C Cannot start optionless poll.",
+                           delete_after=3)
+            return
+
+        # Initial poll message
+        poll = (
+            f"**{ctx.author.mention}** asks: {question}\n\n"
+            f"_Poll active for {time} seconds. React below to vote._")
+        async with ctx.channel.typing():
+            poll_msg = await ctx.send(poll)
+            for emoji in emojis:
+                try:
+                    poll_msg.add_reaction(emoji)
+                except discord.NotFound:
+                    pass
+
+        asyncio.sleep(time)  # Users are reacting
+
+        # End of poll
+        results_emojis = [reaction.emoji for reaction in poll_msg.reactions
+                          if reaction.emoji in emojis]
+        results_count = collections.Counter(results_emojis)
+        results = f"**Poll by {ctx.author} ended!**\n\n"
+        for emoji, count in results_count.most_common():
+            results += f"{emoji}: _{count}_ \n"
+        await ctx.send(results)
 
 
 def setup(bot):

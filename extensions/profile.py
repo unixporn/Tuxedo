@@ -14,7 +14,7 @@ class Profile:
 
     @commands.command(name='setup',
                       aliases=['desktop', 'rice'])
-    async def desktop_setup(self, ctx, *args):
+    async def desktop_setup(self, ctx, *args: str):
         """Adds setup tags to a user, dynamically."""
 
         # Role Holders
@@ -22,15 +22,17 @@ class Profile:
         to_request = []
         to_deny = []
 
+        args = (arg.lower for arg in args)
+
         # TODO This is a separator role. Move this to a util.
         block_top = dutils.get(ctx.guild.roles, name="------- setups -------")
         group = roles.get_group(ctx, 'setups')
 
         for item in args:
-            roles = [existing for existing in ctx.guild.roles
-                     if existing.name.lower() == item.lower()]
+            # roles = [existing for existing in ctx.guild.roles
+            #          if existing.name.lower() == item.lower()]
             try:
-                role = roles[0]
+                role = group[0]
             except IndexError:
                 role = None
             if role is None:
