@@ -921,6 +921,7 @@ class Utility:
             f"**{ctx.author.mention}** asks: {question}\n\n"
             f"_Poll active for {time} seconds. React below to vote._")
 
+        await ctx.send("got this far...")
         poll_msg = await ctx.send(poll)
         for emoji in emojis:
             try:
