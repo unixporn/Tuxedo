@@ -920,13 +920,13 @@ class Utility:
         poll = (
             f"**{ctx.author.mention}** asks: {question}\n\n"
             f"_Poll active for {time} seconds. React below to vote._")
-        async with ctx.channel.typing():
-            poll_msg = await ctx.send(poll)
-            for emoji in emojis:
-                try:
-                    poll_msg.add_reaction(emoji)
-                except discord.NotFound:
-                    pass
+
+        poll_msg = await ctx.send(poll)
+        for emoji in emojis:
+            try:
+                poll_msg.add_reaction(emoji)
+            except discord.NotFound:
+                pass
 
         asyncio.sleep(time)  # Users are reacting
 
