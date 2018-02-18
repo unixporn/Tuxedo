@@ -1,7 +1,6 @@
 """Profile Extension"""
 
 import asyncio
-import discord
 from discord.ext import commands
 from discord import utils as dutils
 from utils import permissions, roles
@@ -24,7 +23,7 @@ class Profile:
 
     @commands.command(name='setup',
                       aliases=['desktop', 'rice'])
-    async def give_setup(self, ctx, *requested: str):
+    async def desktop_setup(self, ctx, *requested: str):
         """Adds setup tags to a user, dynamically."""
         group = roles.get_group(ctx, 'setups')
 
@@ -33,8 +32,14 @@ class Profile:
         to_request = []
         to_deny = []
 
+        # Block indicators
+        group.top = group[0]
+        group.remove(0)
+        group.bottom = group[-1]
+        group.remove(-1)
+
         # Stringify and lowercase
-        requested = [arg.lower() for arg in requested]
+        requested = [arg.lower for arg in requested]
         group_str = [role.name.lower() for role in group]
 
         for request in requested:
@@ -52,7 +57,7 @@ class Profile:
             else:
                 to_add.append(role)
 
-        if to_deny:
+        if to_deny != []:
             await ctx.send(
                 "\u274C Some roles could not be added:\n\n"
                 f"`{', '.join([role.name for role in to_deny])}`\n\n"
@@ -120,10 +125,6 @@ class Profile:
 
         await ctx.send(
             f"\u2705 {ctx.author.mention} Setup accepted!")
-
-    @commands.command
-    async def give_color(self, ctx, color: discord.Color):
-        ...
 
 
 def setup(bot):
