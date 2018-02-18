@@ -9,7 +9,7 @@ class UnknownRole(commands.CommandError):
     pass
 
 
-async def get_group(ctx, group: str) -> List[discord.Role]:
+def get_group(ctx, group: str) -> List[discord.Role]:
     """Retrieves a group of roles via separator role."""
     group_name = f"------- {group} -------"
     separator = dutils.get(ctx.guild.roles, name=group_name)

@@ -26,7 +26,7 @@ class Profile:
 
         # TODO This is a separator role. Move this to a util.
         block_top = dutils.get(ctx.guild.roles, name="------- setups -------")
-        group = await roles.get_group(ctx, 'setups')
+        group = roles.get_group(ctx, 'setups')
 
         for item in args:
             # roles = [existing for existing in ctx.guild.roles
