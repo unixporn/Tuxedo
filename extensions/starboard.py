@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 from utils import database, randomness
-import datetime, random
+import datetime
+import random
 import rethinkdb as rethink
 
 # Tuxedo starboard module
@@ -10,6 +11,7 @@ import rethinkdb as rethink
 
 
 class Starboard:
+
     def __init__(self, bot):
         self.bot = bot
         self.conn = bot.conn
@@ -75,7 +77,7 @@ class Starboard:
                         .table("starboard") \
                         .insert(star_entry) \
                         .run(self.conn)
-                    
+
                 else:
                     try:
                         star_msg = await channel.get_message(

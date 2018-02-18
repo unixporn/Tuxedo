@@ -15,10 +15,7 @@ import sys
 import discord
 from discord.ext import commands
 from discord.ext.commands import errors as commands_errors
-from discord import utils as dutils
-from utils import permissions
-import textwrap
-
+from utils import permissions, roles
 # INITIALIZE BOT #
 
 
@@ -123,8 +120,14 @@ async def on_command_error(ctx, error):
 
     elif isinstance(error, permissions.WrongRole):
         await ctx.send(
-            f":x: You must be a(n) {error}.",
+            f"\u274C You must be a(n) {error}.",
             delete_after=3)
+
+    elif isinstance(error, roles.UnknownRole):
+        await ctx.send(
+            f"\u274C Role `{error}` not found.",
+            delete_after=3
+        )
 
     elif isinstance(error, commands_errors.CommandInvokeError):
         error = error.original
@@ -150,8 +153,9 @@ async def on_command_error(ctx, error):
         error_embed.add_field(
             name="`{}` in command `{}`".format(
                 type(error).__name__, ctx.command.qualified_name),
-            value=(trace_content[:1018] + '...```') if len(trace_content) > 1024
-                else trace_content)
+            value=(trace_content[:1018] + '...```')
+                   if len(trace_content) > 1024
+                   else trace_content)
         await ctx.send(embed_fallback, embed=error_embed)
 
     elif isinstance(error, commands_errors.CommandOnCooldown):

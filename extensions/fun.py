@@ -10,6 +10,7 @@ import random
 import re
 from utils import randomness, permissions
 
+
 def date(argument):
     formats = (
         '%Y/%m/%d',
@@ -24,7 +25,9 @@ def date(argument):
 
     raise commands.BadArgument(':x: Date must be YYYY/MM/DD or YYYY-MM-DD.')
 
+
 class Fun:
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -84,7 +87,8 @@ class Fun:
                             description=fact)
                         .set_footer(text="Powered by fact.birb.pw"))
                 else:
-                    await ctx.send(":x: An HTTP error has occurred.")
+                    await ctx.send(
+                        ":x: An HTTP error has occurred.", delete_after=3)
             sesh.close()
 
     @commands.command(description="Number suffixes are fun.")
@@ -109,7 +113,9 @@ class Fun:
         correctstr = "none"
         joinedcorrect = ", ".join(str(correct))
         if correct != []:
-            correctstr = f"{joinedcorrect} ({len(correct)}, {math.floor(len(correct) / len(correctlist) * 100)}%)"
+            correctstr = (
+                f"{joinedcorrect} ({len(correct)}, "
+                f"{math.floor(len(correct) / len(correctlist) * 100)}%)")
 
         finishedstr = ", ".join(finished)
         if finished == correctlist:
@@ -170,8 +176,9 @@ class Fun:
     async def ship(self, ctx,
                    member1: discord.Member,
                    member2: discord.Member):
-        name1 = member1.display_name[0:round(len(member1.display_name)/2)]
-        name2 = member2.display_name[round(len(member2.display_name)/2):0:-1][::-1]
+        name1 = member1.display_name[0:round(len(member1.display_name) / 2)]
+        name2 = member2.display_name[
+            round(len(member2.display_name) / 2):0:-1][::-1]
         return await ctx.send(
             f'Your ship name is {f"{name1}{name2}" if random.random() >= 0.5 else f"{name2}{name1}"}')
 

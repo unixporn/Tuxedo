@@ -5,11 +5,14 @@ import datetime
 import editdistance
 import re
 
-invitere = r"(?:https?:\/\/)?discord(?:\.gg|app\.com\/invite)?\/(?:#\/)([a-zA-Z0-9-]*)" # road ad regex, thanks road
-invitere2 = r"(http[s]?:\/\/)*discord((app\.com\/invite)|(\.gg))\/(invite\/)?(#\/)?([A-Za-z0-9\-]+)(\/)?" # my own regex
+# road ad regex, thanks road
+invitere = r"(?:https?:\/\/)?discord(?:\.gg|app\.com\/invite)?\/(?:#\/)([a-zA-Z0-9-]*)"
+# my own regex
+invitere2 = r"(http[s]?:\/\/)*discord((app\.com\/invite)|(\.gg))\/(invite\/)?(#\/)?([A-Za-z0-9\-]+)(\/)?"
 
 
 class Snipe:
+
     def __init__(self, bot):
         self.bot = bot
         self.snipes = {}

@@ -2,7 +2,7 @@ import random
 import discord
 from discord.ext import commands
 from discord import utils as dutils
-
+from typing import Union
 
 class Info:
     'Information on various things the bot can see.'
@@ -10,13 +10,15 @@ class Info:
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(pass_context=True)
+    async def info(self, ctx, object):
+        """Automatically selects approproiate info command."""
+        ...
+
     @commands.command(aliases=['guild', 'discord'])
     async def server(self, ctx):
-        'Provides info on a server.'
+        """Provides info on a server."""
         guild = ctx.guild
-        if isinstance(ctx.channel, discord.abc.PrivateChannel):
-            await ctx.send(':x: Cannot be used in a DM.')
-            return
         e = discord.Embed()
         e.set_author(name=guild.name, icon_url=guild.icon_url)
         if guild.owner is None:
@@ -57,7 +59,7 @@ class Info:
 
     @commands.command(name='channel', aliases=['group', 'dm', 'pm', 'room'])
     async def channel(self, ctx, *, channel=None):
-        'Provides info on a channel.'
+        """Provides info on a channel."""
 
         if channel is None:
             channel = ctx.channel
@@ -92,7 +94,7 @@ class Info:
 
     @commands.command(aliases=['title', 'tag'], pass_context=True)
     async def role(self, ctx, *, role: discord.Role=None):
-        'Provides info on a role.'
+        """Provides info on a role."""
         if isinstance(ctx.channel, discord.abc.PrivateChannel):
             await ctx.send(':x: Cannot be used in a DM.', delete_after=3)
             return
@@ -130,7 +132,7 @@ class Info:
 
     @commands.command(name='user', aliases=['person', 'account', 'member'])
     async def user(self, ctx, *, user: discord.Member=None):
-        'Provides info on a user.'
+        """Provides info on a user."""
         if isinstance(ctx.channel, discord.abc.PrivateChannel):
             await ctx.send(':x: Cannot be used in a DM.', delete_after=3)
             return
@@ -165,5 +167,5 @@ class Info:
 
 
 def setup(bot):
-    'Adds to d.py bot.'
+    """Adds to d.py bot. Necessary for all cogs."""
     bot.add_cog(Info(bot))

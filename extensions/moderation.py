@@ -50,7 +50,7 @@ class Moderation:
                             await after.edit(nick=f'{dehoist_char}{after.display_name[0:31]}', reason='[Automatic dehoist]')
                         except discord.Forbidden:
                             return
-            if isascii(after.display_name) == False and not after.display_name.startswith(dehoist_char):
+            if isascii(after.display_name) is False and not after.display_name.startswith(dehoist_char):
                 exists = (lambda: list(r.table('settings').filter(
                     lambda a: a['guild'] == str(g.id)).run(self.conn)) != [])()
                 if not exists:

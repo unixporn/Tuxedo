@@ -3,10 +3,11 @@ import discord
 from discord.ext import commands
 import asyncio
 from utils import permissions
-import shlex, re
+import shlex
+import re
 
-settings = {'modlog_channel': 'channel', 'staff_channel': 'channel', 
-            'tracked_roles': 'rolelist','rolebanned_role': 'role', 'auto_dehoist': 'bool', 'auto_decancer': 'bool',
+settings = {'modlog_channel': 'channel', 'staff_channel': 'channel',
+            'tracked_roles': 'rolelist', 'rolebanned_role': 'role', 'auto_dehoist': 'bool', 'auto_decancer': 'bool',
             'global_bans': 'bool', 'muted_roles': 'rolelist', 'gban_alerts': 'channel', 'no_animated_emojis': 'bool',
             'starboard_min_count': 'number', 'starboard_channel': 'channel', 'starboard_emote': 'emote'}
 
@@ -27,6 +28,7 @@ default_rsn = 'Unknown. Responsible moderator, do {prefix}reason latest <your re
 
 emote_regex = r':([A-Za-z0-9_\-~]+):'
 emote_regex_2 = r'<:([A-Za-z0-9_\-~]+):([0-9]+)>'
+
 
 class ModLogs:
     async def log_entry(self, _type, guild, target, mod, reason, msgid, role='N/A'):
@@ -67,7 +69,7 @@ class ModLogs:
 
         return count
 
-    def modlog_ch(self, g): # I just keep coming back to this piece of code, don't I?
+    def modlog_ch(self, g):  # I just keep coming back to this piece of code, don't I?
         exists = (lambda: list(r.table('settings').filter(
             lambda a: a['guild'] == str(g.id)).run(self.conn)) != [])()
         if not exists:
@@ -195,7 +197,6 @@ class ModLogs:
                     return False
             return True
 
-
     def do_type(self, ctx, _type, value):
         print(value)
         if _type == "channel":
@@ -209,7 +210,8 @@ class ModLogs:
                 return 'ERR|One or more roles not found. Make sure to use \' instead of ".'
             return [str(i.id) for i in roles]
         elif _type == 'role':
-            role = discord.utils.find(lambda a: a.name == value, ctx.guild.roles)
+            role = discord.utils.find(
+                lambda a: a.name == value, ctx.guild.roles)
             if role is None:
                 return 'ERR|Role not found.'
             return str(role.id)
@@ -366,4 +368,4 @@ class ModLogs:
 
 
 def setup(bot):
-	bot.add_cog(ModLogs(bot))
+    bot.add_cog(ModLogs(bot))

@@ -16,6 +16,7 @@ import textwrap
 import rethinkdb as r
 from urllib.parse import quote as uriquote
 
+
 class Utility:
 
     def __init__(self, bot):
@@ -51,7 +52,8 @@ class Utility:
             haste_url = f"http://hastebin.com/{haste_key}"
         # data = {'sprunge': ''}
         # data['sprunge'] = string
-        # haste_url = await self.aioclient.post(url='http://sprunge.us', data=data)
+        # haste_url = await self.aioclient.post(url='http://sprunge.us',
+        # data=data)
         return haste_url
 
     @commands.group(name='shell',
@@ -250,7 +252,7 @@ class Utility:
                             name="`>>> {}`".format(cleaned),
                             value="[`Content too big to be printed. "
                             "Hosted on hastebin.`]({})".format(
-                                       haste_url),
+                                haste_url),
                             inline=False)
 
                         await self.repl_sessions[session].edit(
@@ -443,8 +445,8 @@ class Utility:
             if not silent:
                 with aiohttp.ClientSession() as sesh:
                     async with sesh.post(
-                            "https://hastebin.com/documents/", 
-                            data=output, 
+                            "https://hastebin.com/documents/",
+                            data=output,
                             headers={"Content-Type": "text/plain"}) as r:
                         r = await r.json()
                         embed = discord.Embed(
@@ -455,7 +457,7 @@ class Utility:
                             color=randomness.random_colour())
                         await ctx.send(embed=embed)
 
-    @commands.command(aliases=['sys', 's', 'run', 'sh'], 
+    @commands.command(aliases=['sys', 's', 'run', 'sh'],
                       description="Run system commands.")
     @permissions.owner()
     async def system(self, ctx, *, command: str):
@@ -517,7 +519,7 @@ class Utility:
 
     @commands.command()
     @permissions.owner()
-    async def maintenance(self, ctx, state: str = None):
+    async def maintenance(self, ctx, state: str=None):
         bools = False
         if state is not None:
             if state in ['true', 'false', 'on', 'off']:
@@ -528,7 +530,7 @@ class Utility:
             msg = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
             if msg.content == 'y':
                 await prompt.delete()
-                await self.bot.change_presence(status=discord.Status.dnd, game = None)
+                await self.bot.change_presence(status=discord.Status.dnd, game=None)
                 self.bot.maintenance = True
                 await ctx.send(':white_check_mark: Bot in maintenance mode.')
                 return
@@ -558,7 +560,7 @@ class Utility:
                 return await ctx.send("```You got #rekt!```")
             else:
                 return await ctx.send(
-                     "```{} got #rekt!```".format(flags))
+                    "```{} got #rekt!```".format(flags))
         else:
             process_msg = await ctx.send(
                 "<a:typing:401162479041773568> Processing...")
@@ -590,7 +592,8 @@ class Utility:
 
         # check for unit conversion card
 
-        unit_conversions = node.xpath(".//input[contains(@class, '_eif') and @value]")
+        unit_conversions = node.xpath(
+            ".//input[contains(@class, '_eif') and @value]")
         if len(unit_conversions) == 2:
             e.title = 'Unit Conversion'
 
@@ -602,7 +605,8 @@ class Utility:
             # The first unit being converted (e.g. Miles)
             # The second unit being converted (e.g. Feet)
 
-            xpath = etree.XPath("parent::div/select/option[@selected='1']/text()")
+            xpath = etree.XPath(
+                "parent::div/select/option[@selected='1']/text()")
             try:
                 first_node = unit_conversions[0]
                 first_unit = xpath(first_node)[0]
@@ -610,7 +614,8 @@ class Utility:
                 second_node = unit_conversions[1]
                 second_unit = xpath(second_node)[0]
                 second_value = float(second_node.get('value'))
-                e.description = ' '.join((str(first_value), first_unit, '=', str(second_value), second_unit))
+                e.description = ' '.join(
+                    (str(first_value), first_unit, '=', str(second_value), second_unit))
             except Exception:
                 return None
             else:
@@ -618,20 +623,25 @@ class Utility:
 
         # check for currency conversion card
         if 'currency' in node.get('class', ''):
-            currency_selectors = node.xpath(".//div[@class='ccw_unit_selector_cnt']")
+            currency_selectors = node.xpath(
+                ".//div[@class='ccw_unit_selector_cnt']")
             if len(currency_selectors) == 2:
                 e.title = 'Currency Conversion'
                 # Inside this <div> is a <select> with <option selected="1"> nodes
                 # just like the unit conversion card.
 
                 first_node = currency_selectors[0]
-                first_currency = first_node.find("./select/option[@selected='1']")
+                first_currency = first_node.find(
+                    "./select/option[@selected='1']")
 
                 second_node = currency_selectors[1]
-                second_currency = second_node.find("./select/option[@selected='1']")
+                second_currency = second_node.find(
+                    "./select/option[@selected='1']")
 
-                # The parent of the nodes have a <input class='vk_gy vk_sh ccw_data' value=...>
-                xpath = etree.XPath("parent::td/parent::tr/td/input[@class='vk_gy vk_sh ccw_data']")
+                # The parent of the nodes have a <input class='vk_gy vk_sh
+                # ccw_data' value=...>
+                xpath = etree.XPath(
+                    "parent::td/parent::tr/td/input[@class='vk_gy vk_sh ccw_data']")
                 try:
                     first_value = float(xpath(first_node)[0].get('value'))
                     second_value = float(xpath(second_node)[0].get('value'))
@@ -656,7 +666,8 @@ class Utility:
         if info is not None:
             try:
                 e.title = ''.join(info.itertext()).strip()
-                actual_information = info.xpath("parent::div/parent::div//div[@class='_XWk' or contains(@class, 'kpd-ans')]")[0]
+                actual_information = info.xpath(
+                    "parent::div/parent::div//div[@class='_XWk' or contains(@class, 'kpd-ans')]")[0]
                 e.description = ''.join(actual_information.itertext()).strip()
             except Exception:
                 return None
@@ -667,17 +678,21 @@ class Utility:
         translation = node.find(".//div[@id='tw-ob']")
         if translation is not None:
             src_text = translation.find(".//pre[@id='tw-source-text']/span")
-            src_lang = translation.find(".//select[@id='tw-sl']/option[@selected='1']")
+            src_lang = translation.find(
+                ".//select[@id='tw-sl']/option[@selected='1']")
 
             dest_text = translation.find(".//pre[@id='tw-target-text']/span")
-            dest_lang = translation.find(".//select[@id='tw-tl']/option[@selected='1']")
+            dest_lang = translation.find(
+                ".//select[@id='tw-tl']/option[@selected='1']")
 
             # TODO: bilingual dictionary nonsense?
 
             e.title = 'Translation'
             try:
-                e.add_field(name=src_lang.text, value=src_text.text, inline=True)
-                e.add_field(name=dest_lang.text, value=dest_text.text, inline=True)
+                e.add_field(name=src_lang.text,
+                            value=src_text.text, inline=True)
+                e.add_field(name=dest_lang.text,
+                            value=dest_text.text, inline=True)
             except Exception:
                 return None
             else:
@@ -717,8 +732,8 @@ class Utility:
             lex = etree.XPath(".//div[@class='lr_dct_sf_h']/i/span")
 
             # this one is derived if we were based on the position from lex
-            xpath = etree.XPath("../../../ol[@class='lr_dct_sf_sens']//" \
-                                "div[not(@class and @class='lr_dct_sf_subsen')]/" \
+            xpath = etree.XPath("../../../ol[@class='lr_dct_sf_sens']//"
+                                "div[not(@class and @class='lr_dct_sf_subsen')]/"
                                 "div[@class='_Jig']/div[@data-dobid='dfn']/span")
             for word in words:
                 # we must go two parents up to get the root node
@@ -738,7 +753,8 @@ class Utility:
                         for index, value in enumerate(definitions, 1):
                             descrip.append(f'{index}. {value.text}')
 
-                        e.add_field(name=f'{word.text} /{pronunciation.text}/', value='\n'.join(descrip))
+                        e.add_field(
+                            name=f'{word.text} /{pronunciation.text}/', value='\n'.join(descrip))
                     except:
                         continue
 
@@ -749,7 +765,6 @@ class Utility:
         if location is None:
             return None
 
-
         # these units should be metric
 
         date = node.find("./div[@id='wob_dts']")
@@ -757,7 +772,8 @@ class Utility:
         # <img alt="category here" src="cool image">
         category = node.find(".//img[@id='wob_tci']")
 
-        xpath = etree.XPath(".//div[@id='wob_d']//div[contains(@class, 'vk_bk')]//span[@class='wob_t']")
+        xpath = etree.XPath(
+            ".//div[@id='wob_d']//div[contains(@class, 'vk_bk')]//span[@class='wob_t']")
         temperatures = xpath(node)
 
         misc_info_node = node.find(".//div[@class='vk_gy vk_sh wob-dtl']")
@@ -768,7 +784,6 @@ class Utility:
         precipitation = misc_info_node.find("./div/span[@id='wob_pp']")
         humidity = misc_info_node.find("./div/span[@id='wob_hm']")
         wind = misc_info_node.find("./div/span/span[@id='wob_tws']")
-
 
         try:
             e.title = 'Weather for ' + location.text.strip()
@@ -839,7 +854,7 @@ class Utility:
             </div>
             """
 
-            card_node = root.xpath(".//div[@id='rso']/div[@class='_NId']//" \
+            card_node = root.xpath(".//div[@id='rso']/div[@class='_NId']//"
                                    "div[contains(@class, 'vk_c') or @class='g mnr-c g-blk' or @class='kp-blk']")
 
             if card_node is None or len(card_node) == 0:
@@ -867,9 +882,11 @@ class Utility:
             await ctx.send(str(e))
         else:
             if card:
-                value = '\n'.join(f'[{title}]({url.replace(")", "%29")})' for url, title in entries[:3])
+                value = '\n'.join(
+                    f'[{title}]({url.replace(")", "%29")})' for url, title in entries[:3])
                 if value:
-                    card.add_field(name='Search Results', value=value, inline=False)
+                    card.add_field(name='Search Results',
+                                   value=value, inline=False)
                 return await ctx.send(embed=card)
 
             if len(entries) == 0:
