@@ -49,7 +49,7 @@ class Profile:
                 role = existing[0]
             except IndexError:
                 to_request.append(request)
-                pass
+                continue
             # Within group?
             if (role.position >= group_top.position or
                     role.position <= group_bottom.position):
