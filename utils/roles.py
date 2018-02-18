@@ -15,12 +15,14 @@ def get_group(ctx, group: str) -> List[discord.Role]:
     separator = dutils.get(ctx.guild.roles, name=group_name)
     if not separator:
         raise UnknownRole(group_name)
-    group_roles = []
+    group = []
+    group.top = separator
 
     for role in ctx.guild.role_hierarchy:
         if role.position < separator.position:
             if role.name.startswith('-------') or role.name == 'everyone':
+                group.bottom = role
                 break  # End of group found
-            group_roles.append(role)
+            group.append(role)
 
-    return group_roles
+    return group

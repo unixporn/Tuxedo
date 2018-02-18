@@ -12,35 +12,44 @@ class Profile:
     def __init__(self, bot):
         self.bot = bot
 
+    def helper_str_check(self, r, u):  # HACK Unclean, should be in util
+        for role in u.roles:
+            if (str(role.id) in self.bot.config.get(
+                    'MOD_ROLES')) or (
+                str(role.id) in self.bot.config.get(
+                    'HELPER_ROLES')):
+                return True
+        return False
+
     @commands.command(name='setup',
                       aliases=['desktop', 'rice'])
-    async def desktop_setup(self, ctx, *args: str):
+    async def desktop_setup(self, ctx, *requested: str):
         """Adds setup tags to a user, dynamically."""
+        group = roles.get_group(ctx, 'setups')
 
         # Role Holders
         to_add = []
         to_request = []
         to_deny = []
 
-        args = (arg.lower for arg in args)
+        # Stringify and lowercase
+        requested = [arg.lower() for arg in requested]
+        group_str = [role.name.lower() for role in group]
 
-        # TODO This is a separator role. Move this to a util.
-        block_top = dutils.get(ctx.guild.roles, name="------- setups -------")
-        group = roles.get_group(ctx, 'setups')
-
-        for item in args:
-            # roles = [existing for existing in ctx.guild.roles
-            #          if existing.name.lower() == item.lower()]
+        for request in requested:
+            # Matches to role, assigns first result if exists
+            existing = [role for role in group_str if role == request]
             try:
-                role = group[0]
+                role = existing[0]
             except IndexError:
-                role = None
-            if role is None:
-                to_request.append(item)
-            elif role.position < block_top.position:
-                to_add.append(role)
-            else:
+                to_request.append(request)
+                pass
+            # Within group?
+            if (role.position >= group.top.position or
+                    role.position <= group.bottom.position):
                 to_deny.append(role)
+            else:
+                to_add.append(role)
 
         if to_deny != []:
             await ctx.send(
@@ -51,19 +60,9 @@ class Profile:
             if to_add == [] or to_deny == []:
                 return
         await ctx.author.add_roles(*to_add)
-        if to_request != []:
+        if to_request:
             try:
-
-                def helper_check(r, u):  # HACK Unclean, should be in util
-                    for role in u.roles:
-                        if (str(role.id) in self.bot.config.get(
-                                'MOD_ROLES')) or (
-                            str(role.id) in self.bot.config.get(
-                                'HELPER_ROLES')):
-                            return True
-                    return False
-
-                if helper_check(None, ctx.author):
+                if self.helper_str_check(None, ctx.author):
                     override = True
                 else:
                     # Member Notice
@@ -71,11 +70,11 @@ class Profile:
                         "\u274C Some roles were not found:\n\n"
                         f"`{', '.join(to_request)}`\n\n"
                         f"A staff member will verify shortly.")
+
+                    # Staff Notification
                     staff_channel = dutils.get(
                         ctx.guild.channels,
                         id=int(self.bot.config["STAFF_CHANNEL"]))
-
-                    # Staff Notification
                     request_msg = await staff_channel.send(
                         f"\u274C @here Please verify roles for `{ctx.author}`:"
                         f"\n\n`{', '.join(to_request)}`\n\n")
@@ -86,12 +85,14 @@ class Profile:
                     event = await self.bot.wait_for(
                         'reaction_add',
                         timeout=300.0,
-                        check=helper_check)
+                        check=self.helper_str_check)
+
             except asyncio.TimeoutError:
                 await ctx.send(  # FIXME Always times out
                     f"\u274C {ctx.author.mention} Your request timed out. "
                     "Please contact a staff member directly at a later date.",
                     delete_after=30)
+
             else:
                 # XXX This section is weird
                 try:
