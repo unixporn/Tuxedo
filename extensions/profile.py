@@ -39,12 +39,12 @@ class Profile:
         del group[0], group[-1]
 
         # Stringify and lowercase
-        requested = [arg.lower() for arg in requested]
-        group_str = [role.name.lower() for role in group]
+        requested = (arg.lower() for arg in requested)
 
         for request in requested:
             # Matches to role, assigns first result if exists
-            existing = [role for role in group_str if role == request]
+            existing = [role for role in group
+                        if role.name.lower() == request]
             try:
                 role = existing[0]
             except IndexError:
