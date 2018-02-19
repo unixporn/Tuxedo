@@ -145,7 +145,8 @@ class Profile:
     @commands.command(name="color")
     async def give_color(self, ctx, color: discord.Color):
         """Gives user a custom color role."""
-        if str(color) in ["#ff4646", "#f1c40f", "#2ecc71"]:
+        if str(color) in ["#ff4646", "#f1c40f", "#2ecc71", 
+                          "#36393e", "#ffffff"]:
             return await ctx.send(f"\u274C `{str(color)}` is reserved.")
         group = roles.get_group(ctx, 'colors')
         existing = [existing for existing in group
