@@ -26,6 +26,8 @@ class Profile:
                     aliases=['desktop', 'rice'])
     async def desktop_setup(self, ctx, *requested: str):
         """Adds setup tags to a user, dynamically."""
+        if len(requested) == 0:
+            raise commands.errors.MissingRequiredArgument(ctx)
         group = roles.get_group(ctx, 'setups')
 
         # Role Holders
@@ -146,16 +148,18 @@ class Profile:
         group = roles.get_group(ctx, 'setups')
         role = [existing for existing in group
                 if existing.name == str(color)]
-        try:
-            await ctx.author.add_roles(role[0])
-        except IndexError:
-            role = await ctx.guild.create_role(
-                name=str(color),
-                color=color,
-                reason='color add')
-            role.edit(
-                position=group[0].position - 1)
-            await ctx.author.add_roles(role, reason='color add')
+        async with self.bot.typing():
+            try:
+                await ctx.author.add_roles(role[0])
+            except IndexError:
+                role = await ctx.guild.create_role(
+                    name=str(color),
+                    color=color,
+                    reason='color add')
+                await role.edit(
+                    position=group[0].position - 1)
+                await ctx.author.add_roles(role, reason='color add')
+                await ctx.send(f"\u2705 Color `{str(color)}` added!")
 
 
 def setup(bot):
