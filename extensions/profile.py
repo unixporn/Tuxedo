@@ -153,7 +153,7 @@ class Profile:
         async with ctx.channel.typing():
             for role in ctx.author.roles:
                 if role in group:
-                    ctx.author.remove_roles(role)
+                    await ctx.author.remove_roles(role)
             try:
                 await ctx.author.add_roles(existing[0])
             except IndexError:
