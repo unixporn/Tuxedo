@@ -128,17 +128,17 @@ class Profile:
         await ctx.send(
             f"\u2705 {ctx.author.mention} Setup accepted!")
 
-    @setup.command(aliases=["delete", "rm", "del"])
-    async def _setup_remove(self, ctx, *requested: str):
-        to_remove = []
-        async with self.bot.typing():
-            for request in requested:
-                role = dutils.get(ctx.author.roles, name=request)
-                if role:
-                    to_remove.append(role)
-            await ctx.author.remove_roles(
-                *to_remove, reason='setup remove')
-            await ctx.send(f"Roles removed:\n\n{', '.join(to_remove)}")
+    # @setup.command(aliases=["delete", "rm", "del"])
+    # async def _setup_remove(self, ctx, *requested: str):
+    #     to_remove = []
+    #     async with self.bot.typing():
+    #         for request in requested:
+    #             role = dutils.get(ctx.author.roles, name=request)
+    #             if role:
+    #                 to_remove.append(role)
+    #         await ctx.author.remove_roles(
+    #             *to_remove, reason='setup remove')
+    #         await ctx.send(f"Roles removed:\n\n{', '.join(to_remove)}")
 
     @commands.command(name="color")
     async def give_color(self, ctx, color: discord.Color):
