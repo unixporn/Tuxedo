@@ -39,7 +39,7 @@ class Profile:
         del group[0], group[-1]
 
         # Stringify and lowercase
-        requested = [arg.lower for arg in requested]
+        requested = [arg.lower() for arg in requested]
         group_str = [role.name.lower() for role in group]
 
         for request in requested:
