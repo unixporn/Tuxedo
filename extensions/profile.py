@@ -145,7 +145,7 @@ class Profile:
     @commands.command(name="color")
     async def give_color(self, ctx, color: discord.Color):
         """Gives user a custom color role."""
-        group = roles.get_group(ctx, 'setups')
+        group = roles.get_group(ctx, 'colors')
         role = [existing for existing in group
                 if existing.name == str(color)]
         async with self.bot.typing():
