@@ -152,7 +152,7 @@ class Profile:
                     if existing.name == str(color)]
         async with ctx.channel.typing():
             for role in ctx.author.roles:
-                if role in existing:
+                if role in group:
                     ctx.author.remove_roles(role)
             try:
                 await ctx.author.add_roles(existing[0])
