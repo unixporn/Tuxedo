@@ -45,19 +45,19 @@ class Profile:
 
         for request in requested:
             # Matches to role, assigns first result if exists
-            existing = [role for role in group
-                        if role.name.lower() == request]
+            existing = [existing for existing in group
+                        if existing.name.lower() == request]
             try:
-                role = existing[0]
+                existing = existing[0]
             except IndexError:
                 to_request.append(request)
                 continue
             # Within group?
-            if (role.position >= group_top.position or
-                    role.position <= group_bottom.position):
-                to_deny.append(role)
+            if (existing.position >= group_top.position or
+                    existing.position <= group_bottom.position):
+                to_deny.append(existing)
             else:
-                to_add.append(role)
+                to_add.append(existing)
 
         if to_deny:
             await ctx.send(
@@ -111,10 +111,10 @@ class Profile:
                 if accept:
                     accepted_add = []
                     for name in to_request:
-                        role = await ctx.guild.create_role(
+                        existing = await ctx.guild.create_role(
                             name=name)
-                        role.edit(position=group[0].position - 1)
-                        accepted_add.append(role)
+                        existing.edit(position=group[0].position - 1)
+                        accepted_add.append(existing)
                     await ctx.author.add_roles(*accepted_add)
                     try:
                         await confirm_msg.delete()
@@ -148,19 +148,22 @@ class Profile:
         if str(color) in ["#ff4646", "#f1c40f", "#2ecc71"]:
             return await ctx.send(f"\u274C `{str(color)}` is reserved.")
         group = roles.get_group(ctx, 'colors')
-        role = [existing for existing in group
-                if existing.name == str(color)]
+        existing = [existing for existing in group
+                    if existing.name == str(color)]
         async with ctx.channel.typing():
+            for role in ctx.author.roles:
+                if role in existing:
+                    ctx.author.remove_roles(role)
             try:
-                await ctx.author.add_roles(role[0])
+                await ctx.author.add_roles(existing[0])
             except IndexError:
-                role = await ctx.guild.create_role(
+                existing = await ctx.guild.create_role(
                     name=str(color),
                     color=color,
                     reason='color add')
-                await role.edit(
+                await existing.edit(
                     position=group[0].position)
-                await ctx.author.add_roles(role, reason='color add')
+                await ctx.author.add_roles(existing, reason='color add')
                 await ctx.send(f"\u2705 Color `{str(color)}` added!")
 
 
