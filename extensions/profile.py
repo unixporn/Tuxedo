@@ -131,5 +131,6 @@ class Profile:
         """Gives user a custom color role."""
         ...
 
+
 def setup(bot):
     bot.add_cog(Profile(bot))
