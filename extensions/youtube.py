@@ -17,7 +17,7 @@ class Youtube:
         async with aiohttp.ClientSession() as session:
             response = await session.get(
                 f"https://www.youtube.com/results?search_query={search}")
-        result = BeautifulSoup(response.text, "html.parser")
+        result = BeautifulSoup(response.text(), "html.parser")
         await ctx.send("https://www.youtube.com{}".format(
             result.find_all(attrs={'class': 'yt-uix-tile-link'})[0]
                   .get('href')))
