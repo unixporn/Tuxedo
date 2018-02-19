@@ -159,7 +159,7 @@ class Profile:
                     color=color,
                     reason='color add')
                 await role.edit(
-                    position=group[0].position - 1)
+                    position=group[0].position)
                 await ctx.author.add_roles(role, reason='color add')
                 await ctx.send(f"\u2705 Color `{str(color)}` added!")
 
