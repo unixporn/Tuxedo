@@ -22,8 +22,8 @@ class Profile:
                 return True
         return False
 
-    @commands.command(name='setup',
-                      aliases=['desktop', 'rice'])
+    @commands.group(name='setup',
+                    aliases=['desktop', 'rice'])
     async def desktop_setup(self, ctx, *requested: str):
         """Adds setup tags to a user, dynamically."""
         group = roles.get_group(ctx, 'setups')
@@ -109,8 +109,10 @@ class Profile:
                 if accept:
                     accepted_add = []
                     for name in to_request:
-                        accepted_add.append(await ctx.guild.create_role(
-                            name=name))
+                        role = await ctx.guild.create_role(
+                            name=name)
+                        role.edit(position=group[0].position - 1)
+                        accepted_add.append(role)
                     await ctx.author.add_roles(*accepted_add)
                     try:
                         await confirm_msg.delete()
@@ -126,10 +128,34 @@ class Profile:
         await ctx.send(
             f"\u2705 {ctx.author.mention} Setup accepted!")
 
-    @commands.command
+    @setup.command(aliases=["delete", "rm", "del"])
+    async def _setup_remove(self, ctx, *requested: str):
+        to_remove = []
+        async with self.bot.typing():
+            for request in requested:
+                role = dutils.get(ctx.author.roles, name=request)
+                if role:
+                    to_remove.append(role)
+            await ctx.author.remove_roles(
+                *to_remove, reason='setup remove')
+            await ctx.send(f"Roles removed:\n\n{', '.join(to_remove)}")
+
+    @commands.command(name="color")
     async def give_color(self, ctx, color: discord.Color):
         """Gives user a custom color role."""
-        ...
+        group = roles.get_group(ctx, 'setups')
+        role = [existing for existing in group
+                if existing.name == str(color)]
+        try:
+            await ctx.author.add_roles(role[0])
+        except IndexError:
+            role = await ctx.guild.create_role(
+                name=str(color),
+                color=color,
+                reason='color add')
+            role.edit(
+                position=group[0].position - 1)
+            await ctx.author.add_roles(role, reason='color add')
 
 
 def setup(bot):
