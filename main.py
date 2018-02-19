@@ -167,7 +167,7 @@ async def on_command_error(ctx, error):
         ctx.send(error)
 
 
-@bot.command(aliases=['instructions'])
+@bot.command(aliases=['instructions', 'commands'])
 async def help(ctx, command: str=None):
     cmd = ctx.bot.find_command(command)
     helptext = await ctx.bot.formatter.format_help_for(

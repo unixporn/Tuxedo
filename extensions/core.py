@@ -37,7 +37,7 @@ class Core:
                 except:
                     pass
 
-    def humanbytes(self, B):  # function lifted from StackOverflow :mmLol:
+    def humanbytes(self, B) -> str:  # function lifted from StackOverflow
         'Return the given bytes as a human friendly KB, MB, GB, or TB string'
         B = float(B)
         KB = float(1024)
@@ -59,15 +59,15 @@ class Core:
 
     @commands.command(aliases=['bot', 'source', 'code', 'github'])
     async def about(self, ctx):
-        text = f"""
+        text = """
 ```ini
-upmo is a private instance of Tuxedo by ry00001.
+upmo is a private instance of Erio by ry00001.
 Our repo: https://github.com/unixporn/upmo-discord
 
 [ Tuxedo ]
 ; An open-source moderation bot for Discord
 ; Made by ry00001 in Python 3.6 using Discord.py
-; Source code freely available at https://github.com/ry00000/Tuxedo
+; Source code freely available at https://github.com/ry00000/Erio
 [ Credits ]
 ; HexadecimalPython: Original core
 ; Liara: eval
@@ -85,6 +85,20 @@ Our repo: https://github.com/unixporn/upmo-discord
 
         await ctx.send(text)
 
+    @commands.command(aliases=['addbot', 'connect', 'join'],
+                      hidden=True)
+    async def invite(self, ctx):
+        text = """
+This bot is a private instance of Erio by ry00001.
+It cannot be added to other servers.
+
+Instead, add Erio to your server:
+https://discordapp.com/oauth2/authorize?client_id=338695256759599117&scope=bot
+
+It has most important features from upmo, including starboard and modlogs.
+        """
+
+        await ctx.send(text)
 
     @commands.command()
     async def stats(self, ctx):

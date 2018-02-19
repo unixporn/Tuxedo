@@ -57,7 +57,7 @@ class Profile:
             else:
                 to_add.append(role)
 
-        if to_deny != []:
+        if to_deny:
             await ctx.send(
                 "\u274C Some roles could not be added:\n\n"
                 f"`{', '.join([role.name for role in to_deny])}`\n\n"
