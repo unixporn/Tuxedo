@@ -93,7 +93,7 @@ This bot is a private instance of Erio by ry00001.
 It cannot be added to other servers.
 
 Instead, add Erio to your server:
-https://discordapp.com/oauth2/authorize?client_id=338695256759599117&scope=bot
+<https://discordapp.com/oauth2/authorize?client_id=338695256759599117&scope=bot>
 
 It has most important features from upmo, including starboard and modlogs.
         """
