@@ -148,7 +148,7 @@ class Profile:
         group = roles.get_group(ctx, 'colors')
         role = [existing for existing in group
                 if existing.name == str(color)]
-        async with self.bot.typing():
+        async with ctx.channel.typing():
             try:
                 await ctx.author.add_roles(role[0])
             except IndexError:
