@@ -15,8 +15,10 @@ class Youtube:
         """Search for videos on YouTube"""
         search = parse.quote(query)
         async with aiohttp.ClientSession() as session:
-            response = await session.get(
-                f"https://www.youtube.com/results?search_query={search}").text
+            async with session.get(
+                f"https://www.youtube.com/results?search_query={search}") as resp:
+                response = resp.text()
+
         result = BeautifulSoup(response, "html.parser")
         await ctx.send("https://www.youtube.com{}".format(
             result.find_all(attrs={'class': 'yt-uix-tile-link'})[0]
