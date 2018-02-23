@@ -4,7 +4,7 @@ import emoji
 import asyncio
 
 
-class EmojiStrConverter(commands.Converter):
+class EmojiStr(commands.Converter):
     """Converts to a :class:`Union[discord.Emoji, str]`."""
     @asyncio.coroutine
     def convert(self, ctx, argument):

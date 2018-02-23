@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import permissions, randomness
+from utils import permissions, randomness, converters
 import aiohttp
 import asyncio
 import subprocess
@@ -241,7 +241,6 @@ class Utility:
 
             history[cleaned] = fmt
 
-            print("got this far as well")
             if len(cleaned) > 800:
                 cleaned = "<Too big to be printed>"
 
@@ -909,7 +908,7 @@ class Utility:
 
     @commands.command(aliases=['contest', 'vote'])
     async def poll(self, ctx, question: str, time: int=120,
-                   *emojis: Union[discord.Emoji, str]):
+                   *emojis: converters.EmojiStr):
         """Creates a poll with reaction options."""
         emojis = set(emojis)  # Remove duplicates
         if len(emojis) <= 1:

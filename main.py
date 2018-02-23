@@ -30,12 +30,11 @@ class Bot(commands.Bot):
             self.config = json.load(f)
             self.prefix = self.config.get('BOT_PREFIX')
             self.version = self.config.get('VERSION')
-            self.integrations = self.config.get('INTEGRATIONS')
             self.maintenance = self.config.get('MAINTENANCE')
-            self.directrooms = self.config.get('DIRECTROOMS')
         self.remove_command("help")
         self.rdb = self.config['RETHINKDB']['DB']
-        self.rtables = ["settings", "starboard", "modlog", "tempbans"]
+        self.rtables = ["settings", "starboard", "modlog", "tempbans",
+                        "warnings"]
         self.init_rethinkdb()
         print('Initialization complete.\n\n')
 

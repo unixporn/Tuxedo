@@ -35,7 +35,10 @@ class Moderation:
         @bot.listen('on_member_update')
         async def on_member_update(before, after):
             g = after.guild
-            isascii = lambda s: len(s) == len(s.encode())
+
+            def isascii(s):
+                len(s) == len(s.encode())
+
             # BEGIN AUTO DEHOIST MEME
             if after.display_name.startswith(tuple(chars)):
                 exists = (lambda: list(r.table('settings').filter(
@@ -47,10 +50,13 @@ class Moderation:
                 if 'auto_dehoist' in settings.keys():
                     if settings['auto_dehoist']:
                         try:
-                            await after.edit(nick=f'{dehoist_char}{after.display_name[0:31]}', reason='[Automatic dehoist]')
+                            await after.edit(
+                                nick=f'{dehoist_char}{after.display_name[0:31]}',
+                                reason='[Automatic dehoist]')
                         except discord.Forbidden:
                             return
-            if isascii(after.display_name) is False and not after.display_name.startswith(dehoist_char):
+            if (isascii(after.display_name) is False
+                    and not after.display_name.startswith(dehoist_char)):
                 exists = (lambda: list(r.table('settings').filter(
                     lambda a: a['guild'] == str(g.id)).run(self.conn)) != [])()
                 if not exists:
@@ -427,7 +433,7 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
         for member in people:
             await ctx.guild.ban(
                 member,
-                reason=f'[{str(ctx.author)}] {args.reason}' if args.reason != None else f'Ban by {str(ctx.author)}', 
+                reason=f'[{str(ctx.author)}] {args.reason}' if args.reason != None else f'Ban by {str(ctx.author)}',
                 delete_message_days=args.days if args.days != None else 7)
         msg = await ctx.send(':ok_hand:')
         await asyncio.sleep(3)
@@ -450,7 +456,7 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
                 delete_after=3)
         await ctx.guild.kick(
             member,
-            reason=f'[{str(ctx.author)}] {reason}' if reason 
+            reason=f'[{str(ctx.author)}] {reason}' if reason
             else f'Kick by {str(ctx.author)}')
         msg = await ctx.send(':ok_hand:')
         await asyncio.sleep(3)
@@ -460,7 +466,7 @@ The original ban was placed for reason `{i['reason']}` on date `{hecc}`.
     @permissions.helper()
     async def dehoist(self, ctx, member: discord.Member, *, flags: str=None):
         'Remove a hoisting member\'s hoist.'
-        if (ctx.author.top_role <= member.top_role 
+        if (ctx.author.top_role <= member.top_role
                 or ctx.me.top_role <= member.top_role):
             return await ctx.send(
                 ':x: I can\'t dehoist a member with a higher role than you, '
