@@ -15,7 +15,7 @@ class Search:
             instance = random.sample(instances.read().split('\n'), k=1)
         call = f'https://{instance[0]}/search?q={query}&format=json'
         await ctx.send(call)
-        response = (await self.session.get(call)).json()
+        response = await (await self.session.get(call)).json()
 
         # infoboxes = response['infoboxes']
         results = response['results']
