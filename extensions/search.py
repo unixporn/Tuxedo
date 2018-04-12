@@ -14,8 +14,8 @@ class Search:
         with open('searxes.txt') as instances:
             instance = random.sample(instances.read().split('\n'), k=1)
         call = f'https://{instance[0]}/search?q={query}&format=json'
-        await ctx.send(call)
-        response = await (await self.session.get(call)).json()
+        async with session.get('call') as resp:
+            response = await resp.json()
 
         # infoboxes = response['infoboxes']
         results = response['results']
