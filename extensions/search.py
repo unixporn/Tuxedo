@@ -17,12 +17,11 @@ class Search:
         try:
             async with self.session.get(call) as resp:
                 response = await resp.json()
-        except Exception as e:
-            if (e is aiohttp.ClientConnectorError or 
-                e is aiohttp.ClientResponseError):
-                await ctx.send(
-                    f"There was a problem with `{instance[0]}`. Please contact "
-                    f"ry00001#3487 to have it removed.")
+        except:
+            await ctx.send(
+                f"There was a problem with `{instance[0]}`. Please contact "
+                f"ry00001#3487 to have it removed.")
+            return
 
         # infoboxes = response['infoboxes']
         results = response['results']
