@@ -20,7 +20,7 @@ class Search:
         except aiohttp.ClientError:
             await ctx.send(
                 f"There was a problem with `{instance[0]}`. Please contact "
-                f"ry00001#3487 to have it removed.")
+                f"taciturasa#4365 to have it removed.")
             return
 
         # infoboxes = response['infoboxes']
