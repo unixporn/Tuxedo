@@ -29,7 +29,6 @@ citizen-cam.de
 searx.nulltime.net
 searx.laquadrature.net
 searx.oe5tpo.com
-search.kujiu.org
 searx.potato.hu
 searx.32bitflo.at
 searx.elukerio.org
@@ -38,7 +37,6 @@ framabee.org
 s3arch.eu
 searx.info
 search.jpope.org
-searx.fossencdi.org
 search.koehn.com
 searx.drakonix.net
 search.4ray.co
