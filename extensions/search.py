@@ -24,7 +24,7 @@ class Search:
         msg += (f"**{results[0]['title']}** <{results[0]['url']}>\n"
                 f"{results[0]['content']}\n\n")
         msg += "\n".join(
-            [f'**{entry.title}** <{entry.url}>' for entry in results[1:4]])
+            [f"**{entry['title']}** <{entry['url']}>" for entry in results[1:4]])
         msg += f"\n_Results retrieved from instance `{instance}`._"
 
         await ctx.send(msg)
