@@ -872,7 +872,7 @@ class Utility:
 
         return card, entries
 
-    @commands.command(aliases=['g', 'search'])
+    @commands.command(aliases=['g'])
     async def google(self, ctx, query: str):
         """Searches google and gives you top result."""
         await ctx.trigger_typing()
