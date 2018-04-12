@@ -27,12 +27,9 @@ searx.cc
 searx.ch
 citizen-cam.de
 searx.nulltime.net
-searx.de
 searx.laquadrature.net
 searx.oe5tpo.com
 search.kujiu.org
-searx.new-admin.net
-search.homecomputing.fr
 searx.potato.hu
 searx.32bitflo.at
 searx.elukerio.org
@@ -60,7 +57,6 @@ searx.remote-shell.net
 s.matejc.com
 searx.mrtino.eu
 roflcopter.fr
-win8linux.nohost.me
 searx.itunix.eu
 searx.targaryen.house
 searchx.mobi
