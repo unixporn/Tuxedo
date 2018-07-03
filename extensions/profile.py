@@ -22,150 +22,159 @@ class Profile:
                 return True
         return False
 
-    @commands.group(name='setup',
-                    aliases=['desktop', 'rice'])
-    async def desktop_setup(self, ctx, *requested: str):
-        """Adds setup tags to a user, dynamically."""
-        if len(requested) == 0:
-            raise commands.errors.MissingRequiredArgument(ctx)
-        group = roles.get_group(ctx, 'setups')
 
-        # Role Holders
-        to_add = []
-        to_request = []
-        to_deny = []
+    @commands.group()
+    async def setup_test(self, ctx, url=None, environment, wallpaper, 
+                         screenshot=None, color=discord.Color.default()):
+        """Stores a setup in the bot for a user."""
+        ...
 
-        # Block indicators
-        group_top = group[0]
-        group_bottom = group[-1]
-        del group[0], group[-1]
 
-        # Stringify and lowercase
-        requested = (arg.lower() for arg in requested)
 
-        for request in requested:
-            # Matches to role, assigns first result if exists
-            existing = [existing for existing in group
-                        if existing.name.lower() == request]
-            try:
-                existing = existing[0]
-            except IndexError:
-                to_request.append(request)
-                continue
-            # Within group?
-            if (existing.position >= group_top.position or
-                    existing.position <= group_bottom.position):
-                to_deny.append(existing)
-            else:
-                to_add.append(existing)
+    # @commands.group(name='setup',
+    #                 aliases=['desktop', 'rice'])
+    # async def desktop_setup(self, ctx, *requested: str):
+    #     """Adds setup tags to a user, dynamically."""
+    #     if len(requested) == 0:
+    #         raise commands.errors.MissingRequiredArgument(ctx)
+    #     group = roles.get_group(ctx, 'setups')
 
-        if to_deny:
-            await ctx.send(
-                "\u274C Some roles could not be added:\n\n"
-                f"`{', '.join([role.name for role in to_deny])}`\n\n"
-                f"They conflict with preexisting management roles.",
-                delete_after=30)
-            if to_add == [] or to_deny == []:
-                return
-        await ctx.author.add_roles(*to_add)
-        if to_request:
-            try:
-                if self.helper_str_check(None, ctx.author):
-                    override = True
-                else:
-                    # Member Notice
-                    confirm_msg = await ctx.send(
-                        "\u274C Some roles were not found:\n\n"
-                        f"`{', '.join(to_request)}`\n\n"
-                        f"A staff member will verify shortly.")
+    #     # Role Holders
+    #     to_add = []
+    #     to_request = []
+    #     to_deny = []
 
-                    # Staff Notification
-                    staff_channel = dutils.get(
-                        ctx.guild.channels,
-                        id=int(self.bot.config["STAFF_CHANNEL"]))
-                    request_msg = await staff_channel.send(
-                        f"\u274C @here Please verify roles for `{ctx.author}`:"
-                        f"\n\n`{', '.join(to_request)}`\n\n")
-                    await request_msg.add_reaction("\u2705")
-                    await request_msg.add_reaction("\u274C")
+    #     # Block indicators
+    #     group_top = group[0]
+    #     group_bottom = group[-1]
+    #     del group[0], group[-1]
 
-                    # Looks at staff notification
-                    event = await self.bot.wait_for(
-                        'reaction_add',
-                        timeout=300.0,
-                        check=self.helper_str_check)
+    #     # Stringify and lowercase
+    #     requested = (arg.lower() for arg in requested)
 
-            except asyncio.TimeoutError:
-                await ctx.send(  # FIXME Always times out
-                    f"\u274C {ctx.author.mention} Your request timed out. "
-                    "Please contact a staff member directly at a later date.",
-                    delete_after=30)
+    #     for request in requested:
+    #         # Matches to role, assigns first result if exists
+    #         existing = [existing for existing in group
+    #                     if existing.name.lower() == request]
+    #         try:
+    #             existing = existing[0]
+    #         except IndexError:
+    #             to_request.append(request)
+    #             continue
+    #         # Within group?
+    #         if (existing.position >= group_top.position or
+    #                 existing.position <= group_bottom.position):
+    #             to_deny.append(existing)
+    #         else:
+    #             to_add.append(existing)
 
-            else:
-                # XXX This section is weird
-                try:
-                    accept = (event[0].emoji == "\u2705")
-                except NameError:
-                    accept = override
+    #     if to_deny:
+    #         await ctx.send(
+    #             "\u274C Some roles could not be added:\n\n"
+    #             f"`{', '.join([role.name for role in to_deny])}`\n\n"
+    #             f"They conflict with preexisting management roles.",
+    #             delete_after=30)
+    #         if to_add == [] or to_deny == []:
+    #             return
+    #     await ctx.author.add_roles(*to_add)
+    #     if to_request:
+    #         try:
+    #             if self.helper_str_check(None, ctx.author):
+    #                 override = True
+    #             else:
+    #                 # Member Notice
+    #                 confirm_msg = await ctx.send(
+    #                     "\u274C Some roles were not found:\n\n"
+    #                     f"`{', '.join(to_request)}`\n\n"
+    #                     f"A staff member will verify shortly.")
 
-                if accept:
-                    accepted_add = []
-                    for name in to_request:
-                        existing = await ctx.guild.create_role(
-                            name=name)
-                        existing.edit(position=group[0].position - 1)
-                        accepted_add.append(existing)
-                    await ctx.author.add_roles(*accepted_add)
-                    try:
-                        await confirm_msg.delete()
-                    except NameError:
-                        pass
-                else:
-                    await ctx.send(
-                        f"\u274C {ctx.author.mention} Your request was "
-                        "rejected. A staff member should explain to you soon.",
-                        delete_after=30)
-                    return
+    #                 # Staff Notification
+    #                 staff_channel = dutils.get(
+    #                     ctx.guild.channels,
+    #                     id=int(self.bot.config["STAFF_CHANNEL"]))
+    #                 request_msg = await staff_channel.send(
+    #                     f"\u274C @here Please verify roles for `{ctx.author}`:"
+    #                     f"\n\n`{', '.join(to_request)}`\n\n")
+    #                 await request_msg.add_reaction("\u2705")
+    #                 await request_msg.add_reaction("\u274C")
 
-        await ctx.send(
-            f"\u2705 {ctx.author.mention} Setup accepted!")
+    #                 # Looks at staff notification
+    #                 event = await self.bot.wait_for(
+    #                     'reaction_add',
+    #                     timeout=300.0,
+    #                     check=self.helper_str_check)
 
-    @commands.command(aliases=["delete", "rm", "del"])
-    async def remove(self, ctx, *requested: str):
-        to_remove = []
-        async with self.bot.typing():
-            for request in requested:
-                role = dutils.get(ctx.author.roles, name=request)
-                if role:
-                    to_remove.append(role)
-            await ctx.author.remove_roles(
-                *to_remove, reason='setup remove')
-            await ctx.send(f"Roles removed:\n\n{', '.join(to_remove)}")
+    #         except asyncio.TimeoutError:
+    #             await ctx.send(  # FIXME Always times out
+    #                 f"\u274C {ctx.author.mention} Your request timed out. "
+    #                 "Please contact a staff member directly at a later date.",
+    #                 delete_after=30)
 
-    @commands.command(name="color")
-    async def give_color(self, ctx, color: discord.Color):
-        """Gives user a custom color role."""
-        if str(color) in ["#ff4646", "#f1c40f", "#2ecc71",
-                          "#36393e", "#ffffff"]:
-            return await ctx.send(f"\u274C `{str(color)}` is reserved.")
-        group = roles.get_group(ctx, 'colors')
-        existing = [existing for existing in group
-                    if existing.name == str(color)]
-        async with ctx.channel.typing():
-            for role in ctx.author.roles:
-                if role in group:
-                    await ctx.author.remove_roles(role)
-            try:
-                await ctx.author.add_roles(existing[0])
-            except IndexError:
-                existing = await ctx.guild.create_role(
-                    name=str(color),
-                    color=color,
-                    reason='color add')
-                await existing.edit(
-                    position=group[0].position)
-                await ctx.author.add_roles(existing, reason='color add')
-                await ctx.send(f"\u2705 Color `{str(color)}` added!")
+    #         else:
+    #             # XXX This section is weird
+    #             try:
+    #                 accept = (event[0].emoji == "\u2705")
+    #             except NameError:
+    #                 accept = override
+
+    #             if accept:
+    #                 accepted_add = []
+    #                 for name in to_request:
+    #                     existing = await ctx.guild.create_role(
+    #                         name=name)
+    #                     existing.edit(position=group[0].position - 1)
+    #                     accepted_add.append(existing)
+    #                 await ctx.author.add_roles(*accepted_add)
+    #                 try:
+    #                     await confirm_msg.delete()
+    #                 except NameError:
+    #                     pass
+    #             else:
+    #                 await ctx.send(
+    #                     f"\u274C {ctx.author.mention} Your request was "
+    #                     "rejected. A staff member should explain to you soon.",
+    #                     delete_after=30)
+    #                 return
+
+    #     await ctx.send(
+    #         f"\u2705 {ctx.author.mention} Setup accepted!")
+
+    # @commands.command(aliases=["delete", "rm", "del"])
+    # async def remove(self, ctx, *requested: str):
+    #     to_remove = []
+    #     async with self.bot.typing():
+    #         for request in requested:
+    #             role = dutils.get(ctx.author.roles, name=request)
+    #             if role:
+    #                 to_remove.append(role)
+    #         await ctx.author.remove_roles(
+    #             *to_remove, reason='setup remove')
+    #         await ctx.send(f"Roles removed:\n\n{', '.join(to_remove)}")
+
+    # @commands.command(name="color")
+    # async def give_color(self, ctx, color: discord.Color):
+    #     """Gives user a custom color role."""
+    #     if str(color) in ["#ff4646", "#f1c40f", "#2ecc71",
+    #                       "#36393e", "#ffffff"]:
+    #         return await ctx.send(f"\u274C `{str(color)}` is reserved.")
+    #     group = roles.get_group(ctx, 'colors')
+    #     existing = [existing for existing in group
+    #                 if existing.name == str(color)]
+    #     async with ctx.channel.typing():
+    #         for role in ctx.author.roles:
+    #             if role in group:
+    #                 await ctx.author.remove_roles(role)
+    #         try:
+    #             await ctx.author.add_roles(existing[0])
+    #         except IndexError:
+    #             existing = await ctx.guild.create_role(
+    #                 name=str(color),
+    #                 color=color,
+    #                 reason='color add')
+    #             await existing.edit(
+    #                 position=group[0].position)
+    #             await ctx.author.add_roles(existing, reason='color add')
+    #             await ctx.send(f"\u2705 Color `{str(color)}` added!")
 
 
 def setup(bot):
